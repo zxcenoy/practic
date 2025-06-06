@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="181dp"
+    android:height="181dp"
+    android:viewportWidth="181"
+    android:viewportHeight="181">
+
+    <path
+        android:strokeColor="@color/black"
+        android:strokeWidth="4"
+        android:fillColor="#324A59"
+        android:fillAlpha="0.7"
+        android:pathData="M24.13,45.25h132.73v120.67H24.13z"/>
+
+    <path
+        android:strokeColor="@color/black"
+        android:strokeWidth="4"
+        android:fillColor="#324A59"
+        android:fillAlpha="0.7"
+        android:pathData="M24.13,45.25v18.1h9.05v6.03h12.07v-24.13h-21.12z M156.87,63.35v-18.1h-21.12v24.13h12.07v-6.03h9.05z"/>
+
+    <path
+        android:strokeColor="@color/black"
+        android:strokeWidth="4"
+        android:fillColor="#C0C8CD"
+        android:pathData="M18.12,177.98h138.77c6.66,0 12.07,-5.4 12.07,-12.07h-150.83c0,6.67 5.4,12.07 12.07,12.07z"/>
+
+    <path
+        android:strokeColor="@color/black"
+        android:strokeWidth="4"
+        android:fillColor="#324A59"
+        android:fillAlpha="0.7"
+        android:pathData="M156.87,45.25h15.08c0,-23.33 -18.91,-42.23 -42.23,-42.23h-78.43c-23.33,0 -42.23,18.91 -42.23,42.23h147.81z M69.38,30.17h-12.07v-12.07h12.07v12.07z M123.68,30.17h-12.07v-12.07h12.07v12.07z"/>
+
+    <path
+        android:strokeColor="@color/black"
+        android:strokeWidth="4"
+        android:fillColor="#324A59"
+        android:fillAlpha="0.7"
+        android:pathData="M45.25,69.38v3.02c0,5 4.05,9.05 9.05,9.05h18.1c5,0 9.05,-4.05 9.05,-9.05v-27.15h-36.2v24.13z M99.55,45.25v27.15c0,5 4.05,9.05 9.05,9.05h18.1c5,0 9.05,-4.05 9.05,-9.05v-27.15h-36.2z"/>
+
+    <path
+        android:strokeColor="@color/black"
+        android:strokeWidth="3"
+        android:fillColor="#C0C8CD"
+        android:pathData="M24.13,63.35h-21.12v12.07h30.17v-12.07h-9.05z M147.82,63.35v12.07h30.17v-12.07h-30.17z"/>
+
+    <path
+        android:strokeColor="@color/black"
+        android:strokeWidth="4"
+        android:fillColor="#324A59"
+        android:fillAlpha="0.7"
+        android:pathData="M36.2,129.72v9.05c0,12.07 9.45,21.12 21.12,21.12h6.03c12.07,0 21.12,-9.45 21.12,-21.12v-15.08h-48.27v6.03z M27.15,129.72c-5,0 -9.05,4.05 -9.05,9.05s4.05,9.05 9.05,9.05h9.05v-18.1h-9.05z M96.53,138.77c0,12.07 9.45,21.12 21.12,21.12h6.03c12.07,0 21.12,-9.45 21.12,-21.12v-15.08h-48.27v15.08z M144.8,147.82h9.05c5,0 9.05,-4.05 9.05,-9.05s-4.05,-9.05 -9.05,-9.05h-9.05v18.1z"/>
+
+    <path
+        android:strokeColor="@color/black"
+        android:strokeWidth="2"
+        android:fillColor="#231F20"
+        android:pathData="M57.32,33.18h12.07c1.67,0 3.02,-1.35 3.02,-3.02v-12.07c0,-1.67 -1.35,-3.02 -3.02,-3.02h-12.07c-1.67,0 -3.02,1.35 -3.02,3.02v12.07c0,1.67 1.35,3.02 3.02,3.02z M60.33,21.12h6.03v6.03h-6.03v-6.03z M111.62,33.18h12.07c1.67,0 3.02,-1.35 3.02,-3.02v-12.07c0,-1.67 -1.35,-3.02 -3.02,-3.02h-12.07c-1.67,0 -3.02,1.35 -3.02,3.02v12.07c0,1.67 1.35,3.02 3.02,3.02z M114.63,21.12h6.03v6.03h-6.03v-6.03z"/>
+
+    <path
+        android:strokeColor="@color/black"
+        android:strokeWidth="2"
+        android:fillColor="#231F20"
+        android:pathData="M58.04,96.53h-6.03c0.03,0.6 -0.12,1.19 -0.42,1.7 -1.36,2.72 -1.36,5.93 0,8.65 0.57,1.07 0.57,2.35 0,3.42 -0.7,1.33 -1.05,2.82 -1.02,4.32h6.03c-0.03,-0.6 0.12,-1.19 0.42,-1.71 1.36,-2.72 1.36,-5.93 0,-8.65 -0.57,-1.07 -0.57,-2.35 0,-3.42 0.7,-1.33 1.05,-2.82 1.02,-4.32z M70.11,96.53h-6.03c0.03,0.6 -0.12,1.19 -0.42,1.7 -1.36,2.72 -1.36,5.93 0,8.65 0.57,1.07 0.57,2.35 0,3.42 -0.7,1.33 -1.05,2.82 -1.02,4.32h6.03c-0.03,-0.6 0.12,-1.19 0.42,-1.71 1.36,-2.72 1.36,-5.93 0,-8.65 -0.57,-1.07 -0.57,-2.35 0,-3.42 0.7,-1.33 1.05,-2.82 1.02,-4.32z M130.44,96.53h-6.03c0.03,0.6 -0.12,1.19 -0.42,1.7 -1.36,2.72 -1.36,5.93 0,8.65 0.57,1.07 0.57,2.35 0,3.42 -0.7,1.33 -1.05,2.82 -1.02,4.32h6.03c-0.03,-0.6 0.12,-1.19 0.42,-1.71 1.36,-2.72 1.36,-5.93 0,-8.65 -0.57,-1.07 -0.57,-2.35 0,-3.42 0.7,-1.33 1.05,-2.82 1.02,-4.32z M118.37,96.53h-6.03c0.03,0.6 -0.12,1.19 -0.42,1.7 -1.36,2.72 -1.36,5.93 0,8.65 0.57,1.07 0.57,2.35 0,3.42 -0.7,1.33 -1.05,2.82 -1.02,4.32h6.03c-0.03,-0.6 0.12,-1.19 0.42,-1.71 1.36,-2.72 1.36,-5.93 0,-8.65 -0.57,-1.07 -0.57,-2.35 0,-3.42 0.7,-1.33 1.05,-2.82 1.02,-4.32z"/>
+</vector>
