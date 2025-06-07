@@ -133,5 +133,6 @@
         android:src="@drawable/img_2"
         android:gravity="center"
         android:text=""
+        android:onClick="OnboardingOneNext"
         android:layout_gravity="bottom|right"/>
 </LinearLayout>

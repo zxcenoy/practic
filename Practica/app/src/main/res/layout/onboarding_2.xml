@@ -128,7 +128,7 @@
     </LinearLayout>
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_marginTop="80dp"
-        android:id="@+id/nextButton"
+        android:id="@+id/nextButton2"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@drawable/shape_btn"
