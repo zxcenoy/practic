@@ -23,7 +23,7 @@
         android:strokeColor="@color/black"
         android:strokeWidth="4"
         android:fillColor="#C0C8CD"
-        android:pathData="M18.12,177.98h138.77c6.66,0 12.07,-5.4 12.07,-12.07h-150.83c0,6.67 5.4,12.07 12.07,12.07z"/>
+        android:pathData="M15.12,177.98h138.77c6.66,0 12.07,-5.4 12.07,-12.07h-150.83c0,6.67 5.4,12.07 12.07,12.07z"/>
 
     <path
         android:strokeColor="@color/black"
