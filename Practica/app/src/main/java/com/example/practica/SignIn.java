@@ -29,15 +29,12 @@ import okhttp3.Response;
 
 public class SignIn extends AppCompatActivity {
 
-    // Поля ввода
     private TextInputEditText etEmail, etPassword;
     private TextInputLayout layoutEmail, layoutPassword;
 
-    // Кнопки и ссылки
     private AppCompatImageButton loginButton;
     private TextView tvSignUp, tvSignInOnSignUp;
 
-    // Константы
     private static final String BASE_URL = "https://xenkjiywsgjtgtiyfwxg.supabase.co/auth/v1/token?grant_type=password";
     private static final String API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmtqaXl3c2dqdGd0aXlmd3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMDkwMzEsImV4cCI6MjA2MjY4NTAzMX0.DkEOCkk34vyLZiJq7ivhU0XUIT8l7Z7pu7pP21TF2XU";
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -47,17 +44,14 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in); // замени на имя твоего XML файла
 
-        // Инициализация полей
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         layoutEmail = findViewById(R.id.emailInputLayout);
         layoutPassword = findViewById(R.id.passwordInputLayout);
 
-        // Кнопки
         loginButton = findViewById(R.id.loginButton);
         tvSignUp = findViewById(R.id.tvSignUp);
 
-        // Переход к регистрации
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +59,6 @@ public class SignIn extends AppCompatActivity {
             }
         });
 
-        // Обработка нажатия на кнопку входа
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +123,6 @@ public class SignIn extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     runOnUiThread(() -> {
                         Toast.makeText(SignIn.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                        // Здесь можно открыть главное Activity
                     });
                 } else {
                     runOnUiThread(() -> {
