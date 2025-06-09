@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/white">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow_back"
+        android:backgroundTint="@color/white"/>
+
+    <!-- Заголовок -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PIN CODE"
+        android:textColor="#222222"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Подзаголовок -->
+    <TextView
+        android:id="@+id/subtitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter the PIN code"
+        android:textColor="#777777"
+        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp" />
+
+    <!-- Поля ввода PIN -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="32dp">
+
+        <!-- Каждое поле ввода -->
+        <EditText
+            android:id="@+id/pinField1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="#222222"
+            android:textSize="24sp"
+            android:layout_marginEnd="8dp" />
+
+        <EditText
+            android:id="@+id/pinField2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="#222222"
+            android:textSize="24sp"
+            android:layout_marginEnd="8dp" />
+
+        <EditText
+            android:id="@+id/pinField3"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="#222222"
+            android:textSize="24sp"
+            android:layout_marginEnd="8dp" />
+
+        <EditText
+            android:id="@+id/pinField4"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="#222222"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        android:layout_marginBottom="32dp">
+
+        <TableRow>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn1"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="1"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:layout_weight="1"
+                android:layout_margin="8dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn2"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="2"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn3"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="3"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <!-- Вторая строка -->
+        <TableRow>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn4"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="4"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn5"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="5"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn6"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="6"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <!-- Третья строка -->
+        <TableRow>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn7"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="7"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn8"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="8"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn9"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="9"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <!-- Четвертая строка -->
+        <TableRow>
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btnClear"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text=""
+                android:src="@drawable/arrow_back"
+                android:drawablePadding="0dp"
+                android:padding="16dp"
+                android:layout_span="2"
+                 />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn0"
+                android:layout_width="@dimen/number_pin"
+                android:layout_height="@dimen/number_pin"
+                android:background="@drawable/tochka2"
+                android:text="0"
+                android:textColor="#222222"
+                android:textSize="20sp"
+                android:padding="16dp"
+                />
+        </TableRow>
+    </TableLayout>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:layout_marginTop="30dp"
+        android:id="@+id/nextButton4"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_btn"
+        android:src="@drawable/arrow_next"
+        android:gravity="center"
+        android:text=""
+        android:layout_gravity="bottom|right"/>
+</LinearLayout>

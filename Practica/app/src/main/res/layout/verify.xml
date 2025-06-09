@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/white">
+
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow_back"
+        android:onClick="BackToSignUp"
+        android:backgroundTint="@color/white"/>
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Verification"
+        android:textColor="#222222"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/poppins_medium"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/subtitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter the OTP code we sent you"
+        android:textColor="#777777"
+        android:textSize="16sp"
+        android:fontFamily="@font/poppins_medium"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="32dp">
+
+        <EditText
+            android:id="@+id/otpField1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:layout_marginEnd="12dp" />
+
+        <EditText
+            android:id="@+id/otpField2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="#222222"
+            android:textSize="24sp"
+            android:layout_marginEnd="12dp" />
+
+        <EditText
+            android:id="@+id/otpField3"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:layout_marginEnd="12dp" />
+
+        <EditText
+            android:id="@+id/otpField4"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="#222222"
+            android:textSize="24sp"
+            android:layout_marginEnd="12dp" />
+
+        <EditText
+            android:id="@+id/otpField5"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:layout_marginEnd="12dp"/>
+        <EditText
+            android:id="@+id/otpField6"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:background="@drawable/tochka"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:layout_marginEnd="12dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/resendTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resend in 00:30"
+        android:textColor="#777777"
+        android:textSize="14sp"
+        android:fontFamily="@font/poppins_medium"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="64dp" />
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:layout_marginTop="30dp"
+        android:id="@+id/nextButton4"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_btn"
+        android:src="@drawable/arrow_next"
+        android:gravity="center"
+        android:text=""
+        android:layout_gravity="bottom|right"/>
+</LinearLayout>

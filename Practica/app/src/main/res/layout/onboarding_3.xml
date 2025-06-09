@@ -126,11 +126,11 @@
     </LinearLayout>
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_marginTop="80dp"
-        android:id="@+id/nextButton"
+        android:id="@+id/nextButton3"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@drawable/shape_btn"
-        android:src="@drawable/img_2"
+        android:src="@drawable/arrow_next"
         android:gravity="center"
         android:text=""
         android:layout_gravity="bottom|right"/>
