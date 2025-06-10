@@ -5,4 +5,7 @@
     <color name="textcolor">#FFFAF6</color>
     <color name="colorPrimary">#324A59</color>
     <color name="gray">#AAAAAA</color>
+    <color name="green">#72FF30</color>
+    <color name="red">#FF3030</color>
+    <color name="pinInActive">#D1D1D2</color>
 </resources>

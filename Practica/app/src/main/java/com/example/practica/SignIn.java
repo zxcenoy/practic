@@ -8,13 +8,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -31,45 +32,39 @@ public class SignIn extends AppCompatActivity {
 
     private TextInputEditText etEmail, etPassword;
     private TextInputLayout layoutEmail, layoutPassword;
-
     private AppCompatImageButton loginButton;
-    private TextView tvSignUp, tvSignInOnSignUp;
 
     private static final String BASE_URL = "https://xenkjiywsgjtgtiyfwxg.supabase.co/auth/v1/token?grant_type=password";
     private static final String API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmtqaXl3c2dqdGd0aXlmd3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMDkwMzEsImV4cCI6MjA2MjY4NTAzMX0.DkEOCkk34vyLZiJq7ivhU0XUIT8l7Z7pu7pP21TF2XU";
+
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+    private AuthManager authManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sign_in); // замени на имя твоего XML файла
+        setContentView(R.layout.sign_in);
+
+        authManager = new AuthManager(this);
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         layoutEmail = findViewById(R.id.emailInputLayout);
         layoutPassword = findViewById(R.id.passwordInputLayout);
-
         loginButton = findViewById(R.id.loginButton);
-        tvSignUp = findViewById(R.id.tvSignUp);
 
-        tvSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SignIn.this, SignUp.class));
-            }
-        });
+        findViewById(R.id.tvSignUp).setOnClickListener(v ->
+                startActivity(new Intent(SignIn.this, SignUp.class)));
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        loginButton.setOnClickListener(v -> {
+            if (validateFields()) {
                 signIn();
-                startActivity(new Intent(SignIn.this, MainScreen.class));
-
             }
         });
     }
 
-    private void signIn() {
+    private boolean validateFields() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
@@ -89,13 +84,18 @@ public class SignIn extends AppCompatActivity {
             layoutPassword.setError(null);
         }
 
-        if (!isValid) return;
+        return isValid;
+    }
+
+    private void signIn() {
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
 
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("email", email);
             jsonBody.put("password", password);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Toast.makeText(this, "Error creating request", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -114,20 +114,43 @@ public class SignIn extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                new Handler(Looper.getMainLooper()).post(() ->
+                runOnUiThread(() ->
                         Toast.makeText(SignIn.this, "Network error: " + e.getMessage(), Toast.LENGTH_LONG).show());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(SignIn.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                    });
+                    try {
+                        String responseBody = response.body().string();
+                        Log.d("SignIn", "Response Body: " + responseBody); // Лог ответа
+
+                        JSONObject obj = new JSONObject(responseBody);
+                        String userId = obj.getJSONObject("user").getString("id");
+
+                        runOnUiThread(() -> {
+                            authManager.saveUserId(userId); // сохраняем ID пользователя
+                            authManager.setLoggedIn(true); // установка состояния входа
+
+                            if (authManager.hasPinForCurrentUser()) {
+                                // Переход к вводу PIN
+                                startActivity(new Intent(SignIn.this, PinCode.class));
+                                finish();
+                            } else {
+                                // Установка нового PIN
+                                startActivity(new Intent(SignIn.this, SetPin.class));
+                                finish();
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() ->
+                                Toast.makeText(SignIn.this, "Ошибка разбора ответа", Toast.LENGTH_SHORT).show());
+                    }
                 } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(SignIn.this, "Login failed: " + response.code(), Toast.LENGTH_LONG).show();
-                    });
+                    runOnUiThread(() ->
+                            Toast.makeText(SignIn.this, "Login failed: " + response.code(), Toast.LENGTH_LONG).show());
                 }
             }
         });
