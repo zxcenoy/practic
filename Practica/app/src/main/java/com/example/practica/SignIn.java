@@ -123,23 +123,19 @@ public class SignIn extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     try {
                         String responseBody = response.body().string();
-                        Log.d("SignIn", "Response Body: " + responseBody); // Лог ответа
+                        Log.d("SignIn", "Response Body: " + responseBody);
 
                         JSONObject obj = new JSONObject(responseBody);
                         String userId = obj.getJSONObject("user").getString("id");
 
                         runOnUiThread(() -> {
-                            authManager.saveUserId(userId); // сохраняем ID пользователя
-                            authManager.setLoggedIn(true); // установка состояния входа
+                            authManager.saveUserId(userId);
+                            authManager.setLoggedIn(true);
 
                             if (authManager.hasPinForCurrentUser()) {
-                                // Переход к вводу PIN
                                 startActivity(new Intent(SignIn.this, PinCode.class));
-                                finish();
                             } else {
-                                // Установка нового PIN
                                 startActivity(new Intent(SignIn.this, SetPin.class));
-                                finish();
                             }
                         });
 

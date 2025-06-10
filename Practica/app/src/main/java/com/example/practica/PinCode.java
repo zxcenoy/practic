@@ -82,14 +82,14 @@ public class PinCode extends AppCompatActivity {
                 handler.postDelayed(() -> {
                     startActivity(new Intent(PinCode.this, MainScreen.class));
                     finish();
-                }, 800);
+                }, 5000);
 
             } else {
                 for (EditText field : pinFields) {
                     setFieldBackgroundTint(field, R.color.red);
                 }
 
-                handler.postDelayed(this::resetFields, 1200);
+                handler.postDelayed(this::resetFields, 5000);
             }
         }
     }

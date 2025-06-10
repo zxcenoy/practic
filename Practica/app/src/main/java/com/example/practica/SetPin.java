@@ -88,7 +88,6 @@ public class SetPin extends AppCompatActivity {
                 String secondPin = enteredPin.toString();
 
                 if (secondPin.equals(firstPin)) {
-                    // Сохраняем пин для текущего пользователя
                     String userId = authManager.getCurrentUserId();
                     if (userId != null) {
                         authManager.setPinForUser(userId, secondPin);
