@@ -2,12 +2,37 @@ package com.example.practica;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class AuthManager {
 
     private static final String PREFS_NAME = "auth_prefs";
     private static final String KEY_LOGGED_IN = "is_logged_in";
     private static final String KEY_USER_ID = "user_id";
+
+    public void saveAccessTokenFromResponse(String jsonResponse, Context context) {
+        try {
+            // Парсим JSON
+            Gson gson = new Gson();
+            JsonObject jsonObject = gson.fromJson(jsonResponse, JsonObject.class);
+
+            // Извлекаем токен
+            String accessToken = jsonObject.get("access_token").getAsString();
+
+            // Сохраняем в SharedPreferences
+            SharedPreferences sharedPref = context.getSharedPreferences("my_app_data", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("access_token", accessToken);
+            editor.apply();
+
+            Log.d("TokenStorage", "Токен успешно сохранён");
+        } catch (Exception e) {
+            Log.e("TokenStorage", "Ошибка при извлечении или сохранении токена", e);
+        }
+    }
 
     private SharedPreferences sharedPreferences;
 

@@ -113,7 +113,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/poppins_medium"
         android:textColor="@color/colorPrimary"
-        />
+        android:onClick="ForgotPasswordClick"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_marginTop="80dp"

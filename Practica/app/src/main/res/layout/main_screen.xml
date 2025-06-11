@@ -38,7 +38,8 @@
             android:src="@drawable/profile_icon"
             android:contentDescription="Profile"
             android:layout_marginLeft="8dp"
-            android:layout_gravity="end" />
+            android:layout_gravity="end"
+            android:onClick="ProfileClick"/>
     </LinearLayout>
 
     <LinearLayout
@@ -290,18 +291,24 @@
         <androidx.appcompat.widget.AppCompatImageButton
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/img"
-            android:background="@color/white"/>
+            android:src="@drawable/main_menu_icon"
+            android:background="@color/white"
+            android:scaleType="fitXY"
+            android:onClick="MainScreenClick"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/img_1"
-            android:layout_marginLeft="32dp" />
+            android:src="@drawable/reward_icon"
+            android:layout_marginLeft="32dp"
+            android:scaleType="fitXY"
+            android:onClick="RewardScreenClick"/>
         <androidx.appcompat.widget.AppCompatImageButton
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/img_2"
-            android:layout_marginLeft="32dp" />
+            android:src="@drawable/orders_icon"
+            android:layout_marginLeft="32dp"
+            android:scaleType="fitXY"
+            android:onClick="OrdersScreenClick"/>
     </LinearLayout>
 </LinearLayout>
