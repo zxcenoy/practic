@@ -244,7 +244,6 @@
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
                             Toast.makeText(Profile.this, "Avatar updated!", Toast.LENGTH_SHORT).show();
-                            // Сохраняем URL аватара локально
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("avatar_url", avatarUrl);
                             editor.putString("user_avatar_updated", "true");
@@ -268,7 +267,6 @@
             }
 
 
-            // Запрос для получения данных из profiles
             HttpUrl profilesUrl = HttpUrl.parse("https://xenkjiywsgjtgtiyfwxg.supabase.co/rest/v1/profiles")
                     .newBuilder()
                     .addQueryParameter("id", "eq." + userId)
@@ -378,7 +376,6 @@
                                 String userEmail = user.optString("email", "");
 
                                 runOnUiThread(() -> {
-                                    // Обновляем email
                                     if (!userEmail.isEmpty()) {
                                         email.setText(userEmail);
                                         SharedPreferences.Editor editor = prefs.edit();

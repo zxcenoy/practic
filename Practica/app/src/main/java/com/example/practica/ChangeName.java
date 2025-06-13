@@ -112,7 +112,6 @@ public class ChangeName extends AppCompatActivity {
                 .addHeader("Prefer", "return=minimal")
                 .build();
 
-        // 5. Выполняем запрос
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

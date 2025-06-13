@@ -61,7 +61,6 @@ public class ChangeAddress extends AppCompatActivity {
             return;
         }
 
-        // 1. Создаем JSON для обновления
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("address", newAddress);
@@ -70,7 +69,6 @@ public class ChangeAddress extends AppCompatActivity {
             return;
         }
 
-        // 2. Получаем access token
         SharedPreferences prefs = getSharedPreferences("my_app_data", MODE_PRIVATE);
         String accessToken = prefs.getString("access_token", null);
         if (accessToken == null) {
@@ -78,7 +76,6 @@ public class ChangeAddress extends AppCompatActivity {
             return;
         }
 
-        // 3. Формируем запрос
         RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
         Request request = new Request.Builder()
                 .url(DOMAIN_NAME + REST_PATH + "profiles?id=eq." + userId)
@@ -89,7 +86,6 @@ public class ChangeAddress extends AppCompatActivity {
                 .addHeader("Prefer", "return=minimal")
                 .build();
 
-        // 4. Отправляем запрос
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -105,7 +101,6 @@ public class ChangeAddress extends AppCompatActivity {
                 String responseBody = response.body() != null ? response.body().string() : null;
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
-                        // Успешное обновление
                         saveAndReturnAddress(newAddress);
                     } else {
                         Log.e(TAG, "Server error: " + response.code() + ", " + responseBody);
@@ -118,12 +113,10 @@ public class ChangeAddress extends AppCompatActivity {
     }
 
     private void saveAndReturnAddress(String newAddress) {
-        // Сохраняем в SharedPreferences
         SharedPreferences.Editor editor = getSharedPreferences("my_app_data", MODE_PRIVATE).edit();
         editor.putString("user_address", newAddress);
         editor.apply();
 
-        // Возвращаем результат
         Intent resultIntent = new Intent();
         resultIntent.putExtra("new_address", newAddress);
         setResult(RESULT_OK, resultIntent);

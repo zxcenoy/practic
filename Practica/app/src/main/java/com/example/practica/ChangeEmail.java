@@ -79,12 +79,10 @@ public class ChangeEmail extends AppCompatActivity {
             @Override
             public void onResponse(String responseBody) {
                 runOnUiThread(() -> {
-                    // Сохраняем новый email локально
                     SharedPreferences.Editor editor = getSharedPreferences("my_app_data", MODE_PRIVATE).edit();
                     editor.putString("user_email", newEmail);
                     editor.apply();
 
-                    // Возвращаем результат и закрываем активность
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("new_email", newEmail);
                     setResult(RESULT_OK, resultIntent);
