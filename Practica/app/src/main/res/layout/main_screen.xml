@@ -25,21 +25,26 @@
             android:textStyle="bold" />
 
         <ImageView
+            android:id="@+id/basketBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/basket_icon"
             android:contentDescription="Cart"
             android:layout_marginLeft="16dp"
-            android:layout_gravity="end" />
+            android:layout_gravity="end"
+            android:onClick="BasketClick"/>
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/profileBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/profile_icon"
             android:contentDescription="Profile"
+            android:background="@color/white"
             android:layout_marginLeft="8dp"
             android:layout_gravity="end"
-            android:onClick="ProfileClick"/>
+            android:onClick="ProfileClick"
+            android:scaleType="fitXY"/>
     </LinearLayout>
 
     <LinearLayout

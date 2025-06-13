@@ -79,7 +79,7 @@ public class SetPin extends AppCompatActivity {
                 firstPin = enteredPin.toString();
                 isConfirming = true;
 
-                handler.postDelayed(this::resetFieldsWithEmptyBackground, 5000);
+                handler.postDelayed(this::resetFieldsWithEmptyBackground, 2500);
 
                 ((TextView) findViewById(R.id.titleText)).setText("CONFIRM PIN");
                 ((TextView) findViewById(R.id.subtitleText)).setText("Re-enter your PIN to confirm");
@@ -107,7 +107,7 @@ public class SetPin extends AppCompatActivity {
                         setFieldBackgroundTint(field, R.color.red);
                     }
 
-                    handler.postDelayed(this::resetFields, 5000);
+                    handler.postDelayed(this::resetFields, 2500);
                 }
             }
         }

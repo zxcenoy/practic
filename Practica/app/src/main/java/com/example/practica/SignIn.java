@@ -6,11 +6,15 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
@@ -23,8 +27,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class SignIn extends AppCompatActivity {
+
+    private AuthManager authManager;
 
     private EditText etEmail, etPassword;
     private TextInputLayout emailInputLayout, passwordInputLayout;
@@ -47,6 +54,9 @@ public class SignIn extends AppCompatActivity {
 
         AppCompatImageButton loginButton = findViewById(R.id.loginButton);
         loginButton.setOnClickListener(v -> signIn());
+
+        authManager = new AuthManager(this);
+
     }
 
     public void ForgotPasswordClick(View view) {
@@ -89,16 +99,48 @@ public class SignIn extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(SignIn.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(SignIn.this, PinCode.class));
-                        finish();
-                    });
-                } else {
-                    runOnUiThread(() ->
-                            Toast.makeText(SignIn.this, "Login failed", Toast.LENGTH_SHORT).show());
+                try {
+                    if (response.isSuccessful()) {
+                        String responseBodyString = response.body().string(); // Читаем один раз
+
+                        // Парсим JSON
+                        try {
+                            JsonElement jsonElement = new JsonParser().parse(responseBodyString);
+                            Gson gson = new Gson();
+                            String prettyJson = gson.toJson(jsonElement);
+
+                            AuthManager auth = new AuthManager(getApplicationContext());
+                            auth.saveAccessTokenFromResponse(prettyJson, getApplicationContext());
+
+                        } catch (Exception e) {
+                            Log.e("JSON_PARSE_ERROR", "Ошибка при парсинге JSON", e);
+                        }
+
+                        // Используем ранее прочитанное тело
+                        JSONObject object = new JSONObject(responseBodyString);
+                        String userId = object.getJSONObject("user").getString("id");
+
+                        runOnUiThread(() -> {
+                            authManager.saveUserId(userId);
+                            authManager.setLoggedIn(true);
+                            Toast.makeText(SignIn.this, "Login successful", Toast.LENGTH_SHORT).show();
+                            if (authManager.hasPinForCurrentUser()) {
+                                startActivity(new Intent(SignIn.this, PinCode.class));
+                            } else {
+                                startActivity(new Intent(SignIn.this, SetPin.class));
+                            }
+                            finish();
+                        });
+
+                    } else {
+                        runOnUiThread(() ->
+                                Toast.makeText(SignIn.this, "Login failed", Toast.LENGTH_SHORT).show()
+                        );
+                    }
+                } catch (Exception e) {
+                    Log.e("!!!!!!", e.getMessage(), e);
                 }
+
             }
         });
     }

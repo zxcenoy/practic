@@ -90,6 +90,7 @@ public class ChangePassword extends AppCompatActivity {
                             Toast.makeText(ChangePassword.this, "Password changed successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(ChangePassword.this, SignIn.class));
                             finishAffinity();
+
                         } else {
                             Toast.makeText(ChangePassword.this, "Failed to change password", Toast.LENGTH_SHORT).show();
                         }

@@ -3,7 +3,10 @@ package com.example.practica;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -39,8 +42,43 @@ public class OTPVerify extends AppCompatActivity {
         otpFields[3] = findViewById(R.id.otpField4);
         otpFields[4] = findViewById(R.id.otpField5);
         otpFields[5] = findViewById(R.id.otpField6);
+        setupOtpFields();
+
 
         findViewById(R.id.otp).setOnClickListener(v -> verifyOtpCode());
+    }
+    private void setupOtpFields() {
+        for (int i = 0; i < otpFields.length; i++) {
+            final int currentIndex = i;
+
+            otpFields[i].addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() == 1 && currentIndex < otpFields.length - 1) {
+                        otpFields[currentIndex + 1].requestFocus();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+
+            otpFields[i].setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_DEL &&
+                        event.getAction() == KeyEvent.ACTION_DOWN &&
+                        otpFields[currentIndex].getText().length() == 0 &&
+                        currentIndex > 0) {
+
+                    otpFields[currentIndex - 1].requestFocus();
+                    otpFields[currentIndex - 1].setText("");
+                    return true;
+                }
+                return false;
+            });
+        }
     }
 
     private void verifyOtpCode() {

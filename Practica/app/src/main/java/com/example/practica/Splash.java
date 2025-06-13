@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class Splash extends AppCompatActivity {
 
     private AuthManager authManager;
-    private static final int SPLASH_DELAY = 5000;
+    private static final int SPLASH_DELAY = 2500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,7 @@ public class Splash extends AppCompatActivity {
             } else {
                 startActivity(new Intent(Splash.this, SignIn.class));
             }
+            finish();
 
         }, SPLASH_DELAY);
     }

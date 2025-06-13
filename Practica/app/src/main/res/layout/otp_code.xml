@@ -64,7 +64,7 @@
             android:maxLength="1"
             android:gravity="center"
             android:background="@drawable/tochka"
-            android:textColor="#222222"
+            android:textColor="@color/white"
             android:textSize="24sp"
             android:layout_marginEnd="12dp" />
 
@@ -88,7 +88,7 @@
             android:maxLength="1"
             android:gravity="center"
             android:background="@drawable/tochka"
-            android:textColor="#222222"
+            android:textColor="@color/white"
             android:textSize="24sp"
             android:layout_marginEnd="12dp" />
 
@@ -116,7 +116,7 @@
             android:layout_marginEnd="12dp"/>
     </LinearLayout>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/resendTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
         android:textSize="14sp"
         android:fontFamily="@font/poppins_medium"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="64dp" />
+        android:layout_marginBottom="64dp" />-->
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_marginTop="30dp"
