@@ -1,7 +1,9 @@
     package com.example.practica;
 
+    import androidx.annotation.NonNull;
     import androidx.appcompat.app.AppCompatActivity;
     import androidx.appcompat.widget.AppCompatImageButton;
+    import org.apache.commons.io.IOUtils;
 
     import android.content.Context;
     import android.content.Intent;
@@ -14,12 +16,14 @@
     import android.widget.TextView;
     import android.widget.Toast;
 
+    import com.squareup.picasso.NetworkPolicy;
     import com.squareup.picasso.Picasso;
 
     import org.json.JSONArray;
     import org.json.JSONException;
     import org.json.JSONObject;
 
+    import java.io.File;
     import java.io.IOException;
     import java.io.InputStream;
 
@@ -86,6 +90,8 @@
                         .placeholder(R.drawable.profile)
                         .into(avatar);
             }
+            loadCachedAvatar();
+
             fetchUserProfile();
 
             AppCompatImageButton editNameButton = findViewById(R.id.editNameButton);
@@ -114,6 +120,30 @@
             fetchUserProfile();
 
         }
+        private void loadCachedAvatar() {
+            SharedPreferences prefs = getSharedPreferences("my_app_data", MODE_PRIVATE);
+            String avatarUrl = prefs.getString("avatar_url", null);
+
+            if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                Picasso.get()
+                        .load(avatarUrl)
+                        .networkPolicy(NetworkPolicy.OFFLINE)
+                        .into(avatar, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d("Avatar", "Loaded from cache");
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Picasso.get()
+                                        .load(avatarUrl)
+                                        .into(avatar);
+                            }
+                        });
+
+            }
+        }
 
         private void openImageChooser() {
             Intent intent = new Intent();
@@ -128,7 +158,17 @@
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
                 Uri imageUri = data.getData();
                 avatar.setImageURI(imageUri);
-                uploadImageToSupabase(imageUri);
+                uploadAvatarAndUpdateUser(getApplicationContext(), imageUri, new ChangeEmail.SBC_Callback() {
+                    @Override
+                    public void onFailure(IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String responseBody) {
+
+                    }
+                });
 
             }
 
@@ -158,61 +198,158 @@
                     editor.putString("user_address", newAddress);
                     editor.apply();
 
-                    //fetchUserProfile();
                 }
             }
         }
-        private void uploadImageToSupabase(Uri imageUri) {
-            String userId = authManager.getCurrentUserId();
-            if (userId == null) {
-                Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
+        public void uploadAvatarAndUpdateUser(Context context, Uri uri, ChangeEmail.SBC_Callback callback) {
+            String realPath = RealPathUtil.getRealPath(context, uri);
+
+            if (realPath == null) {
+                callback.onFailure(new IOException("Не удалось получить путь файла"));
                 return;
             }
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(imageUri);
-                byte[] imageBytes = new byte[inputStream.available()];
-                inputStream.read(imageBytes);
 
-                RequestBody requestBody = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("file", "avatar.jpg",
-                                RequestBody.create(imageBytes, MediaType.parse("image/jpeg")))
-                        .build();
+            String userId = authManager.getCurrentUserId();
+            String fileName = "profile_" + userId + ".jpg";
 
-                SharedPreferences prefs = getSharedPreferences("my_app_data", MODE_PRIVATE);
-                String accessToken = prefs.getString("access_token", null);
+            File file = new File(realPath);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
 
-                Request request = new Request.Builder()
-                        .url("https://xenkjiywsgjtgtiyfwxg.supabase.co/storage/v1/object/avatars/" + userId + "/avatar.jpg")
-                        .put(requestBody)
-                        .addHeader("apikey", getString(R.string.supabase_anon_key))
-                        .addHeader("Authorization", "Bearer " + accessToken)
-                        .build();
+            MultipartBody body = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("file", fileName, requestBody)
+                    .build();
 
-                new OkHttpClient().newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        runOnUiThread(() ->
-                                Toast.makeText(Profile.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
+            String url = "https://xenkjiywsgjtgtiyfwxg.supabase.co/storage/v1/object/avatars/"  + fileName;
+            SharedPreferences sharedPref = getSharedPreferences("my_app_data", Context.MODE_PRIVATE);
+
+            String token = sharedPref.getString("access_token", null);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .put(body)
+                    .addHeader("apikey", getString(R.string.supabase_anon_key))
+                    .addHeader("Authorization", "Bearer " + token)
+                    .build();
+
+            new OkHttpClient().newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    callback.onFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        updateAvatarUrlInDatabase(context, url, callback);
+                    } else {
+                        String errorBody = response.body() != null ? response.body().string() : "Empty response";
+                        callback.onFailure(new IOException("Upload failed: " + response.code() + ", Body: " + errorBody));
                     }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        runOnUiThread(() -> {
-                            if (response.isSuccessful()) {
-                                updateProfileWithAvatarUrl(userId);
-                            } else {
-                                Toast.makeText(Profile.this, "Upload failed: " + response.code(), Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                });
-            } catch (Exception e) {
-                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+                }
+            });
         }
-        private void updateProfileWithAvatarUrl(String userId) {
-            String avatarUrl = "https://xenkjiywsgjtgtiyfwxg.supabase.co/storage/v1/object/public/avatars/" + userId + "/avatar.jpg";
+        public void updateAvatarUrlInDatabase(Context context, String avatarUrl, ChangeEmail.SBC_Callback callback) {
+            String userId = authManager.getCurrentUserId();
+
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("avatar_url", avatarUrl);
+            } catch (JSONException e) {
+                return;
+            }
+
+            RequestBody body = RequestBody.create(
+                    MediaType.get("application/json"), jsonBody.toString());
+
+            String updateUrl = "https://xenkjiywsgjtgtiyfwxg.supabase.co" + "/rest/v1/users?id=eq." + userId;
+            SharedPreferences sharedPref = getSharedPreferences("my_app_data", Context.MODE_PRIVATE);
+
+            String token = sharedPref.getString("access_token", null);
+            Request request = new Request.Builder()
+                    .url(updateUrl)
+                    .patch(body)
+                    .addHeader("apikey", getString(R.string.supabase_anon_key))
+                    .addHeader("Authorization", "Bearer " + token)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Prefer", "return=minimal")
+                    .build();
+
+            new OkHttpClient().newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    callback.onFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            callback.onResponse("Аватар успешно обновлен");
+                        } else {
+                            String errorBody = response.body() != null ? response.body().string() : "Empty response";
+                            callback.onFailure(new IOException("DB update failed: " + response.code() + ", Body: " + errorBody));
+                        }
+                    } catch (IOException e) {
+                        callback.onFailure(e);
+                    }
+                }
+            });
+        }
+        /*private void uploadImageToSupabase(Uri imageUri) {
+            String userId = authManager.getCurrentUserId();
+            if (userId == null) {
+                Toast.makeText(Profile.this, "User non auth", Toast.LENGTH_SHORT).show();
+
+                return;
+            }
+            String realPath = RealPathUtil.getRealPath(getApplicationContext(), imageUri);
+            File file = new File(realPath);
+            String fileName = userId + "avatar.jpg";
+            String mimeType = "image/*";
+            RequestBody requestBody1 = RequestBody.create(MediaType.parse(mimeType), file);
+
+
+            SharedPreferences sharedPref = getSharedPreferences("my_app_data", Context.MODE_PRIVATE);
+
+            String token = sharedPref.getString("access_token", null);
+
+            Request request = new Request.Builder()
+                    .url("https://xenkjiywsgjtgtiyfwxg.supabase.co/storage/v1/object/avatars/" + fileName)
+                    .put(requestBody1)
+                    .addHeader("apikey", getString(R.string.supabase_anon_key))
+                    .addHeader("Authorization", "Bearer " + token)
+                    .build();
+
+            new OkHttpClient().newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("Upload failed: " , e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        String error = response.body() != null ?
+                                response.body().string() : "No error details";
+                       // Log.e("Upload failed: " , response.code() + " - " + error);
+                    } else {
+                        avatar.setImageURI(imageUri);
+                        updateProfileWithAvatarUrl(userId);
+                    }
+                }
+            });
+        }*/
+        /*private void updateProfileWithAvatarUrl(String userId) {
+            String avatarUrl = userId + "avatar.jpg";
+            SharedPreferences.Editor editor = getSharedPreferences("my_app_data", MODE_PRIVATE).edit();
+            editor.putString("avatar_url", avatarUrl);
+            editor.apply();
+            runOnUiThread(() -> {
+                Picasso.get()
+                        .load(avatarUrl)
+                        .networkPolicy(NetworkPolicy.NO_CACHE)
+                        .into(avatar);
+            });
 
             JSONObject jsonBody = new JSONObject();
             try {
@@ -225,11 +362,11 @@
             String accessToken = prefs.getString("access_token", null);
 
             Request request = new Request.Builder()
-                    .url("https://xenkjiywsgjtgtiyfwxg.supabase.co/rest/v1/profiles?id=eq." + userId)
-                    .patch(RequestBody.create(jsonBody.toString(), MediaType.get("application/json")))
+                    .url("https://xenkjiywsgjtgtiyfwxg.supabase.co/rest/v1/profiles?id=eq." + userId )
+                    .patch(RequestBody.create(MediaType.get("application/json"),jsonBody.toString()))
                     .addHeader("apikey", getString(R.string.supabase_anon_key))
                     .addHeader("Authorization", "Bearer " + accessToken)
-                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Prefer", "return=minimal")
                     .build();
 
             new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -254,7 +391,7 @@
                     });
                 }
             });
-        }
+        }*/
         private void fetchUserProfile() {
             OkHttpClient client = new OkHttpClient();
             SharedPreferences prefs = getSharedPreferences("my_app_data", MODE_PRIVATE);
@@ -338,11 +475,20 @@
                                         editor1.apply();
                                     }
                                     if (!avatarUrl.isEmpty()) {
-                                        if (!prefs.getString("user_avatar_updated", "false").equals("true")) {
-                                            Picasso.get()
-                                                    .load(avatarUrl)
-                                                    .placeholder(R.drawable.profile)
-                                                    .into(avatar);
+                                        long lastUpdate = prefs.getLong("avatar_last_update", 0);
+                                        long serverUpdate = profile.optLong("updated_at", 0);
+
+                                        if (serverUpdate > lastUpdate|| !prefs.getString("user_avatar_updated", "false").equals("true")) {
+                                            runOnUiThread(() -> {
+                                                Picasso.get()
+                                                        .load(avatarUrl)
+                                                        .into(avatar);
+
+                                                SharedPreferences.Editor editor = prefs.edit();
+                                                editor.putString("avatar_url", avatarUrl);
+                                                editor.putLong("avatar_last_update", serverUpdate);
+                                                editor.apply();
+                                            });
                                         }
                                     }
                                 });

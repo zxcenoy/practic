@@ -29,6 +29,7 @@ public class AuthManager {
     private static final String DOMAIN_NAME = "https://xenkjiywsgjtgtiyfwxg.supabase.co/";
     public static String REST_PATH = "rest/v1/";
     public static String AUTH_PATH = "auth/v1/";
+
     public interface AuthCallback {
         void onSuccess(String message);
         void onError(String error);

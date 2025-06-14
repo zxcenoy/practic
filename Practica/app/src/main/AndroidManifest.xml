@@ -46,6 +46,10 @@
             android:exported="true"/>
         <activity android:name=".ChangeEmail"
             android:exported="true"/>
+        <activity android:name=".Rewards"
+            android:exported="true"/>
+        <activity android:name=".Orders"
+            android:exported="true"/>
 
     </application>
 
