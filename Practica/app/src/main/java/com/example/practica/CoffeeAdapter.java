@@ -9,10 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.practica.CoffeeItem;
+import com.example.practica.R;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class CoffeeAdapter extends RecyclerView.Adapter<CoffeeAdapter.CoffeeViewHolder> {
     private List<CoffeeItem> coffeeItems;
+    private List<CoffeeItem> coffeeItemsFull;
     private OnCoffeeClickListener listener;
 
     public interface OnCoffeeClickListener {
@@ -21,6 +26,48 @@ public class CoffeeAdapter extends RecyclerView.Adapter<CoffeeAdapter.CoffeeView
 
     public CoffeeAdapter(List<CoffeeItem> coffeeItems) {
         this.coffeeItems = coffeeItems;
+        this.coffeeItemsFull = new ArrayList<>(coffeeItems);
+    }
+
+    public void filter(String category, int maxPrice) {
+        List<CoffeeItem> filteredList = new ArrayList<>();
+
+        for (CoffeeItem item : coffeeItemsFull) {
+            boolean matchesCategory = category.equals("all") ||
+                    item.getCategory().equalsIgnoreCase(category);
+            boolean matchesPrice = item.getPrice() <= maxPrice;
+
+            if (matchesCategory && matchesPrice) {
+                filteredList.add(item);
+            }
+        }
+
+        coffeeItems = filteredList;
+        notifyDataSetChanged();
+    }
+
+    public void resetFilters() {
+        coffeeItems = new ArrayList<>(coffeeItemsFull);
+        notifyDataSetChanged();
+    }
+
+    static class CoffeeViewHolder extends RecyclerView.ViewHolder {
+        ImageView coffeeImage;
+        TextView coffeeName;
+        TextView coffeePrice;
+
+        public CoffeeViewHolder(@NonNull View itemView) {
+            super(itemView);
+            coffeeImage = itemView.findViewById(R.id.coffeeImage);
+            coffeeName = itemView.findViewById(R.id.coffeeName);
+            coffeePrice = itemView.findViewById(R.id.coffeePrice);
+        }
+
+        public void bind(CoffeeItem item) {
+            coffeeImage.setImageResource(item.getImageResId());
+            coffeeName.setText(item.getName());
+            coffeePrice.setText(String.format("$%d", item.getPrice()));
+        }
     }
 
     public void setOnCoffeeClickListener(OnCoffeeClickListener listener) {
@@ -50,21 +97,5 @@ public class CoffeeAdapter extends RecyclerView.Adapter<CoffeeAdapter.CoffeeView
     @Override
     public int getItemCount() {
         return coffeeItems.size();
-    }
-
-    static class CoffeeViewHolder extends RecyclerView.ViewHolder {
-        ImageView coffeeImage;
-        TextView coffeeName;
-
-        public CoffeeViewHolder(@NonNull View itemView) {
-            super(itemView);
-            coffeeImage = itemView.findViewById(R.id.coffeeImage);
-            coffeeName = itemView.findViewById(R.id.coffeeName);
-        }
-
-        public void bind(CoffeeItem item) {
-            coffeeImage.setImageResource(item.getImageResId());
-            coffeeName.setText(item.getName());
-        }
     }
 }
