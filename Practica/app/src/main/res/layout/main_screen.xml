@@ -32,14 +32,16 @@
                 android:textStyle="bold"
                 android:layout_weight="1"/>
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/basketBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:src="@drawable/basket_icon"
                 android:contentDescription="Cart"
                 android:layout_marginLeft="16dp"
-                android:layout_gravity="left" />
+                android:layout_gravity="left"
+                android:scaleType="fitXY"
+                android:backgroundTint="@android:color/transparent"/>
 
             <ImageButton
                 android:id="@+id/profileBtn"

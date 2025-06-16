@@ -4,9 +4,9 @@ public class CoffeeItem {
     private String name;
     private int imageResId;
     private String category;
-    private int price;
+    private double price;
 
-    public CoffeeItem(String name, int imageResId, String category, int price) {
+    public CoffeeItem(String name, int imageResId, String category, double price) {
         this.name = name;
         this.imageResId = imageResId;
         this.category = category;
@@ -29,7 +29,7 @@ public class CoffeeItem {
         this.category = category;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 

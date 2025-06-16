@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="16dp"
+        android:background="@color/white"
+        android:layout_marginTop="10dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/arrow_back"
+            android:background="@android:color/transparent"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Details"
+            android:fontFamily="@font/poppins_medium"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+        <ImageButton
+            android:id="@+id/btnCart"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/basket_icon"
+            android:scaleType="fitXY"
+            android:background="@android:color/transparent"/>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/coffeeImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topBar"
+        android:layout_marginTop="2dp"
+        android:background="@color/white"
+        android:scaleType="fitCenter"
+        android:src="@drawable/americano_menu_photo" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/coffeeImage"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/coffeeName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="Americano"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnDecrease"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="-"
+                        android:textSize="18sp"
+                        android:background="@drawable/pin"/>
+
+                    <TextView
+                        android:id="@+id/tvQuantity"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:layout_marginHorizontal="8dp"/>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnIncrease"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="+"
+                        android:textSize="18sp"
+                        android:background="@drawable/pin"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shot"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="8dp"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnSingle"
+                        android:layout_width="65dp"
+                        android:layout_height="30dp"
+                        android:text="Single"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:background="@drawable/shot_btn_active"
+                        android:layout_marginEnd="8dp"/>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnDouble"
+                        android:layout_width="65dp"
+                        android:layout_height="30dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Double"
+                        android:textSize="14sp"
+                        android:background="@drawable/shot_btn_inactive"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="16sp"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/btnSelect1"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:src="@drawable/coffee_cup_details"
+                    android:scaleType="fitXY"
+                    android:layout_gravity="bottom"
+                    android:background="@android:color/transparent"/>
+
+                <ImageButton
+                    android:id="@+id/btnSelect2"
+                    android:layout_width="24dp"
+                    android:layout_height="44dp"
+                    android:src="@drawable/coffee_stakan_details"
+                    android:scaleType="fitXY"
+                    android:layout_gravity="bottom"
+                    android:background="@android:color/transparent"
+                    android:layout_marginStart="16dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Size"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="16sp"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/btnSmall"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/coffee_size_small_inactive"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="8dp"
+                    android:scaleType="fitXY"/>
+
+                <ImageButton
+                    android:id="@+id/btnMedium"
+                    android:layout_width="24dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/coffee_size_medium_active"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="8dp"
+                    android:scaleType="fitXY"/>
+
+                <ImageButton
+                    android:id="@+id/btnLarge"
+                    android:layout_width="24dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/coffee_size_large_inactive"
+                    android:background="@android:color/transparent"
+                    android:layout_gravity="bottom"
+                    android:scaleType="fitXY"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ice"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="8dp"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+
+
+                <ImageButton
+                    android:id="@+id/btnNoIce"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="8dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ice_small_inactive" />
+
+                <ImageButton
+                        android:id="@+id/btnLightIce"
+                        android:layout_width="40dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="bottom"
+                        android:src="@drawable/ice_medium_inactive"
+                        android:background="@android:color/transparent"
+                        android:layout_marginEnd="8dp"
+                        android:scaleType="fitXY"/>
+
+                <ImageButton
+                    android:id="@+id/btnFullIce"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="bottom"
+                    android:src="@drawable/ice_large_active"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/totalAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total Amount: $3.00"
+                android:textSize="18sp"
+                android:fontFamily="@font/poppins_medium"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"/>
+
+            <Button
+                android:id="@+id/btnCheckout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Checkout"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/colorPrimary"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -50,6 +50,10 @@
             android:exported="true"/>
         <activity android:name=".Orders"
             android:exported="true"/>
+        <activity android:name=".CartActivity"
+            android:exported="true"/>
+        <activity android:name=".CoffeeDetailActivity"
+            android:exported="true"/>
 
     </application>
 

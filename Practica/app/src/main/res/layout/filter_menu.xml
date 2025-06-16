@@ -44,7 +44,7 @@
             android:id="@+id/closeFilter"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/img"
+            android:src="@drawable/crestik_icon"
             android:scaleType="fitXY"
             android:layout_gravity="center_vertical"/>
 

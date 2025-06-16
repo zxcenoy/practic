@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvItemName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Americano"
+            android:fontFamily="@font/poppins_medium"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tvItemPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$3.00"
+            android:fontFamily="@font/poppins_medium"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvItemOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="single | iced | medium | full ice"
+        android:textColor="#666"
+        android:fontFamily="@font/poppins_medium"
+        android:layout_marginTop="4dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDecrease"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="-"
+            android:textSize="14sp"
+            android:background="@drawable/shot_btn_inactive"
+            android:contentDescription="Уменьшить количество"/>
+
+        <TextView
+            android:id="@+id/tvItemQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:fontFamily="@font/poppins_medium"
+            android:textSize="16sp"
+            android:minWidth="24dp"
+            android:gravity="center"
+            android:layout_marginHorizontal="8dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnIncrease"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="+"
+            android:textSize="14sp"
+            android:background="@drawable/shot_btn_inactive"
+            android:contentDescription="Увеличить количество"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/btnRemoveItem"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/remove_cart_item"
+            android:scaleType="fitXY"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Удалить из корзины"/>
+    </LinearLayout>
+</LinearLayout>

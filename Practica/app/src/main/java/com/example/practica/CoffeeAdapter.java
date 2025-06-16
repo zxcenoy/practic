@@ -28,6 +28,11 @@ public class CoffeeAdapter extends RecyclerView.Adapter<CoffeeAdapter.CoffeeView
         this.coffeeItems = coffeeItems;
         this.coffeeItemsFull = new ArrayList<>(coffeeItems);
     }
+    public CoffeeAdapter(List<CoffeeItem> coffeeItems, OnCoffeeClickListener listener) {
+        this.coffeeItems = coffeeItems;
+        this.coffeeItemsFull = new ArrayList<>(coffeeItems);
+        this.listener = listener;
+    }
 
     public void filter(String category, int maxPrice) {
         List<CoffeeItem> filteredList = new ArrayList<>();
@@ -66,7 +71,7 @@ public class CoffeeAdapter extends RecyclerView.Adapter<CoffeeAdapter.CoffeeView
         public void bind(CoffeeItem item) {
             coffeeImage.setImageResource(item.getImageResId());
             coffeeName.setText(item.getName());
-            coffeePrice.setText(String.format("$%d", item.getPrice()));
+            coffeePrice.setText(String.format("$%.2f", item.getPrice()));
         }
     }
 

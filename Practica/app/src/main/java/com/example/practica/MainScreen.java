@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MainScreen extends AppCompatActivity {
+    private CoffeeAdapter adapter;
     ImageButton btnProf;
     private TextView greetingText;
     private TextView filterGreetingText;
@@ -46,6 +47,15 @@ public class MainScreen extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.main_screen);
 
+        coffeeRecyclerView = findViewById(R.id.coffeeRecyclerView);
+        coffeeRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
+        adapter = new CoffeeAdapter(getCoffeeList(), this::openCoffeeDetails);
+        coffeeRecyclerView.setAdapter(adapter);
+
+        ImageButton btnCart = findViewById(R.id.basketBtn);
+        btnCart.setOnClickListener(v -> startActivity(new Intent(this, CartActivity.class)));
+
         btnProf = findViewById(R.id.profileBtn);
         greetingText = findViewById(R.id.greetingText);
         filterGreetingText = findViewById(R.id.filterGreeting);
@@ -54,7 +64,7 @@ public class MainScreen extends AppCompatActivity {
         loadUserName();
 
         btnProf.setOnClickListener(v -> gotoProfile());
-        findViewById(R.id.basketBtn).setOnClickListener(this::BasketClick);
+        //findViewById(R.id.basketBtn).setOnClickListener(this::BasketClick);
 
         loyaltyRecyclerView = findViewById(R.id.loyaltyRecyclerView);
         LoyaltyAdapter loyaltyAdapter = new LoyaltyAdapter(getLoyaltyCups());
@@ -62,16 +72,25 @@ public class MainScreen extends AppCompatActivity {
         loyaltyRecyclerView.setLayoutManager(new LinearLayoutManager(
                 this, LinearLayoutManager.HORIZONTAL, false));
 
-        coffeeRecyclerView = findViewById(R.id.coffeeRecyclerView);
+        /*coffeeRecyclerView = findViewById(R.id.coffeeRecyclerView);
         CoffeeAdapter coffeeAdapter = new CoffeeAdapter(getCoffeeList());
         coffeeRecyclerView.setAdapter(coffeeAdapter);
-        coffeeRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        coffeeRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));*/
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         bottomNav.setSelectedItemId(R.id.nav_home);
 
         initFilters();
+    }
+
+
+    private void openCoffeeDetails(CoffeeItem coffee) {
+        Intent intent = new Intent(this, CoffeeDetailActivity.class);
+        intent.putExtra("coffee_name", coffee.getName());
+        intent.putExtra("coffee_price", coffee.getPrice());
+        intent.putExtra("coffee_image", coffee.getImageResId());
+        startActivity(intent);
     }
 
     private void initFilters() {
@@ -175,10 +194,10 @@ public class MainScreen extends AppCompatActivity {
 
     private List<CoffeeItem> getCoffeeList() {
         List<CoffeeItem> coffeeItems = new ArrayList<>();
-        coffeeItems.add(new CoffeeItem("Americano", R.drawable.americano_menu_photo, "black", 3));
-        coffeeItems.add(new CoffeeItem("Cappuccino", R.drawable.cappuccino_menu_photo, "milk", 4));
-        coffeeItems.add(new CoffeeItem("Mocha", R.drawable.mocha_menu_photo, "milk", 5));
-        coffeeItems.add(new CoffeeItem("Flat White", R.drawable.flat_menu_photo, "milk", 5));
+        coffeeItems.add(new CoffeeItem("Americano", R.drawable.americano_menu_photo, "black", 3.0));
+        coffeeItems.add(new CoffeeItem("Cappuccino", R.drawable.cappuccino_menu_photo, "milk", 4.0));
+        coffeeItems.add(new CoffeeItem("Mocha", R.drawable.mocha_menu_photo, "milk", 5.0));
+        coffeeItems.add(new CoffeeItem("Flat White", R.drawable.flat_menu_photo, "milk", 5.0));
         return coffeeItems;
     }
 
@@ -202,6 +221,6 @@ public class MainScreen extends AppCompatActivity {
     }
 
     public void BasketClick(View view) {
-        startActivity(new Intent(getApplicationContext(), MainScreen.class)); //TODO Замени на  экран корзины когда сделашеь
+        startActivity(new Intent(getApplicationContext(), CartActivity.class));
     }
 }
