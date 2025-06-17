@@ -14,47 +14,53 @@
         android:theme="@style/Theme.Practica"
         tools:targetApi="31">
         <activity
-            android:name=".SignIn"
+            android:name=".Activity.SignIn"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainScreen"
+        <activity android:name=".Activity.MainScreen"
             android:exported="true">
         </activity>
-        <activity android:name=".SignUp"
+        <activity android:name=".Activity.OnboardingOne"
             android:exported="true"/>
-        <activity android:name=".PinCode"
+        <activity android:name=".Activity.OnboardingTwo"
             android:exported="true"/>
-        <activity android:name=".SetPin"
+        <activity android:name=".Activity.OnboardingThree"
             android:exported="true"/>
-        <activity android:name=".Splash"
+        <activity android:name=".Activity.SignUp"
             android:exported="true"/>
-        <activity android:name=".ForgotPassword"
+        <activity android:name=".Activity.PinCode"
             android:exported="true"/>
-        <activity android:name=".OTPVerify"
+        <activity android:name=".Activity.SetPin"
             android:exported="true"/>
-        <activity android:name=".ChangePassword"
+        <activity android:name=".Activity.Splash"
             android:exported="true"/>
-        <activity android:name=".Profile"
+        <activity android:name=".Activity.ForgotPassword"
             android:exported="true"/>
-        <activity android:name=".ChangeName"
+        <activity android:name=".Activity.OTPVerify"
             android:exported="true"/>
-        <activity android:name=".ChangeAddress"
+        <activity android:name=".Activity.ChangePassword"
             android:exported="true"/>
-        <activity android:name=".ChangeEmail"
+        <activity android:name=".Activity.Profile"
             android:exported="true"/>
-        <activity android:name=".Rewards"
+        <activity android:name=".Activity.ChangeName"
             android:exported="true"/>
-        <activity android:name=".CartActivity"
+        <activity android:name=".Activity.ChangeAddress"
             android:exported="true"/>
-        <activity android:name=".CoffeeDetailActivity"
+        <activity android:name=".Activity.ChangeEmail"
             android:exported="true"/>
-        <activity android:name=".OrderSuccessActivity"
+        <activity android:name=".Activity.Rewards"
             android:exported="true"/>
-        <activity android:name=".OrdersActivity"
+        <activity android:name=".Activity.CartActivity"
+            android:exported="true"/>
+        <activity android:name=".Activity.CoffeeDetailActivity"
+            android:exported="true"/>
+        <activity android:name=".Activity.OrderSuccessActivity"
+            android:exported="true"/>
+        <activity android:name=".Activity.OrdersActivity"
             android:exported="true"/>
 
     </application>

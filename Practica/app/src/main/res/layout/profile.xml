@@ -11,6 +11,14 @@
         android:layout_gravity="center"
         android:orientation="vertical"
         android:layout_marginBottom="25dp">
+        <ImageButton
+            android:id="@+id/backMainButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow_back"
+            android:onClick="BackMain"
+            android:backgroundTint="@color/white"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +28,7 @@
             android:fontFamily="@font/poppins_medium"
             android:textStyle="bold"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="0dp"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/LogOutButton"
