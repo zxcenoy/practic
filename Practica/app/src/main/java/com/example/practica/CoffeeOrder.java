@@ -1,6 +1,7 @@
 package com.example.practica;
 
 public class CoffeeOrder {
+    private boolean id;
     private String name;
     private double price;
     private String description;
@@ -35,5 +36,13 @@ public class CoffeeOrder {
 
     public double getTotalPrice() {
         return price * quantity;
+    }
+
+    public boolean getId() {
+        return id;
+    }
+
+    public void setId(boolean id) {
+        this.id = id;
     }
 }

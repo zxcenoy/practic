@@ -41,4 +41,7 @@ public class CartManager {
         }
         return total;
     }
+    public void clearCart() {
+        items.clear();
+    }
 }

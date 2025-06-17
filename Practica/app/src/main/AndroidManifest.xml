@@ -48,11 +48,13 @@
             android:exported="true"/>
         <activity android:name=".Rewards"
             android:exported="true"/>
-        <activity android:name=".Orders"
-            android:exported="true"/>
         <activity android:name=".CartActivity"
             android:exported="true"/>
         <activity android:name=".CoffeeDetailActivity"
+            android:exported="true"/>
+        <activity android:name=".OrderSuccessActivity"
+            android:exported="true"/>
+        <activity android:name=".OrdersActivity"
             android:exported="true"/>
 
     </application>

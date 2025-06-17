@@ -1,11 +1,8 @@
 package com.example.practica;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -14,10 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -209,7 +204,7 @@ public class MainScreen extends AppCompatActivity {
             startActivity(new Intent(MainScreen.this, Rewards.class));
             return true;
         } else if (id == R.id.nav_orders) {
-            startActivity(new Intent(MainScreen.this, Orders.class));
+            startActivity(new Intent(MainScreen.this, OrdersActivity.class));
             return true;
         }
         return false;
