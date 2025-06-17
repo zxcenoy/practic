@@ -200,7 +200,6 @@ public class CoffeeDetailActivity extends AppCompatActivity {
         btnCheckout.setOnClickListener(v -> {
             CoffeeOrder order = createOrder();
             CartManager.getInstance().addToCart(order);
-            Toast.makeText(this, "Added to cart", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, CartActivity.class));
         });
     }

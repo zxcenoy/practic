@@ -2,6 +2,7 @@ package com.example.practica.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -55,10 +56,6 @@ public class ChangeAddress extends AppCompatActivity {
         }
 
         String userId = authManager.getCurrentUserId();
-        if (userId == null) {
-            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         JSONObject jsonBody = new JSONObject();
         try {
@@ -71,7 +68,10 @@ public class ChangeAddress extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("my_app_data", MODE_PRIVATE);
         String accessToken = prefs.getString("access_token", null);
         if (accessToken == null) {
-            Toast.makeText(this, "Authentication required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SignIn.class);
+            startActivity(intent);
+            finish();
             return;
         }
 
@@ -89,9 +89,7 @@ public class ChangeAddress extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    Log.e(TAG, "Network error", e);
-                    Toast.makeText(ChangeAddress.this,
-                            "Network error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("Network error: " , e.getMessage().toString());
                 });
             }
 
@@ -103,8 +101,6 @@ public class ChangeAddress extends AppCompatActivity {
                         saveAndReturnAddress(newAddress);
                     } else {
                         Log.e(TAG, "Server error: " + response.code() + ", " + responseBody);
-                        Toast.makeText(ChangeAddress.this,
-                                "Error updating address: " + responseBody, Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -120,7 +116,5 @@ public class ChangeAddress extends AppCompatActivity {
         resultIntent.putExtra("new_address", newAddress);
         setResult(RESULT_OK, resultIntent);
         finish();
-
-        Toast.makeText(this, "Address updated successfully", Toast.LENGTH_SHORT).show();
     }
 }

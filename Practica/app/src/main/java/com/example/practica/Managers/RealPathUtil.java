@@ -60,7 +60,7 @@ public class RealPathUtil {
 
             return tempFile.getAbsolutePath();
         } catch (Exception e) {
-            Log.e("RealPathUtil", "Ошибка получения пути файла", e);
+            Log.e("RealPathUtil", "Error getting the file path", e);
             return null;
         }
     }

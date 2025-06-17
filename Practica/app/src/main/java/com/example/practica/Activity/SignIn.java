@@ -77,7 +77,7 @@ public class SignIn extends AppCompatActivity {
             jsonBody.put("email", email);
             jsonBody.put("password", password);
         } catch (Exception e) {
-            Toast.makeText(this, "Error creating request", Toast.LENGTH_SHORT).show();
+            Log.e( "Error creating request", e.getMessage().toString());
             return;
         }
 
@@ -93,8 +93,9 @@ public class SignIn extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(() ->
-                        Toast.makeText(SignIn.this, "Network error", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() ->{
+                    Log.e("Network error", e.getMessage().toString());
+                });
             }
 
             @Override
@@ -112,7 +113,7 @@ public class SignIn extends AppCompatActivity {
                             auth.saveAccessTokenFromResponse(prettyJson, getApplicationContext());
 
                         } catch (Exception e) {
-                            Log.e("JSON_PARSE_ERROR", "Ошибка при парсинге JSON", e);
+                            Log.e("JSON_PARSE_ERROR", "Parsing Error JSON", e);
                         }
 
                         JSONObject object = new JSONObject(responseBodyString);
@@ -121,7 +122,6 @@ public class SignIn extends AppCompatActivity {
                         runOnUiThread(() -> {
                             authManager.saveUserId(userId);
                             authManager.setLoggedIn(true);
-                            //Toast.makeText(SignIn.this, "Login successful", Toast.LENGTH_SHORT).show();
                             if (authManager.hasPinForCurrentUser()) {
                                 startActivity(new Intent(SignIn.this, PinCode.class));
                             } else {
@@ -131,12 +131,14 @@ public class SignIn extends AppCompatActivity {
                         });
 
                     } else {
-                        runOnUiThread(() ->
-                                Toast.makeText(SignIn.this, "Login failed", Toast.LENGTH_SHORT).show()
-                        );
+                        runOnUiThread(() ->{
+                            Log.e("Login failed", String.valueOf(response));
+                        });
+
+
                     }
                 } catch (Exception e) {
-                    Log.e("!!!!!!", e.getMessage(), e);
+                    Log.e("Error", e.getMessage(), e);
                 }
 
             }

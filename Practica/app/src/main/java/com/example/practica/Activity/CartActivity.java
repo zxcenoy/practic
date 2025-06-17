@@ -110,8 +110,16 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
     private void createOrder(String address, int paymentMethodId, double total) {
         String userId = authManager.getCurrentUserId();
-        if (userId == null) {
-            Toast.makeText(this, "Пользователь не авторизован", Toast.LENGTH_SHORT).show();
+        SharedPreferences sharedPref = getSharedPreferences("my_app_data", Context.MODE_PRIVATE);
+        String accessToken = sharedPref.getString("access_token", "");
+
+        if (accessToken.isEmpty()) {
+            runOnUiThread(() -> {
+                Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, SignIn.class);
+                startActivity(intent);
+                finish();
+            });
             return;
         }
 
@@ -137,7 +145,6 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
             createMainOrder(orderJson, itemsArray);
         } catch (JSONException e) {
-            Toast.makeText(this, "Ошибка формирования заказа", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -161,8 +168,10 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(() ->
-                        Toast.makeText(CartActivity.this, "Ошибка сети: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> {
+
+                    Log.e("Network errror", e.getMessage().toString());
+                });
             }
 
             @Override
@@ -179,14 +188,12 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
                         }
                     } catch (Exception e) {
                         runOnUiThread(() -> {
-                            Toast.makeText(CartActivity.this, "Ошибка обработки заказа", Toast.LENGTH_SHORT).show();
-                            Log.e("OrderError", "Ошибка парсинга ответа", e);
+                            Log.e("OrderError", "Error parsing" + e.getMessage().toString());
                         });
                     }
                 } else {
                     String errorBody = response.body() != null ? response.body().string() : "Empty response body";
                     runOnUiThread(() -> {
-                        Toast.makeText(CartActivity.this, "Ошибка создания заказа: " + response.code() + " - " + errorBody, Toast.LENGTH_LONG).show();
                         Log.e("OrderError", "HTTP " + response.code() + ": " + errorBody);
                     });
                 }
@@ -202,7 +209,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
         if (accessToken.isEmpty()) {
             runOnUiThread(() -> {
-                Toast.makeText(this, "Требуется авторизация", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, SignIn.class);
                 startActivity(intent);
                 finish();
@@ -224,17 +231,17 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
                     if (productIdObj instanceof Boolean) {
                         productId = (Boolean)productIdObj ? 1 : 0;
-                        Log.w("OrderItems", "Получен boolean вместо product_id, преобразовано в: " + productId);
+                        Log.w("OrderItems", "Get boolean  product_id, parsed in: " + productId);
                     } else if (productIdObj instanceof Integer) {
                         productId = (Integer)productIdObj;
                     } else if (productIdObj instanceof String) {
                         try {
                             productId = Integer.parseInt((String)productIdObj);
                         } catch (NumberFormatException e) {
-                            throw new JSONException("Неверный формат product_id: " + productIdObj);
+                            throw new JSONException("Invalid format product_id: " + productIdObj);
                         }
                     } else {
-                        throw new JSONException("Неизвестный тип product_id: " + productIdObj.getClass().getSimpleName());
+                        throw new JSONException("Invalid type product_id: " + productIdObj.getClass().getSimpleName());
                     }
 
                     if (productId >= 0) {
@@ -244,26 +251,26 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
                         cleanedItem.put("price", originalItem.getDouble("price"));
                         cleanedItemsArray.put(cleanedItem);
                     } else {
-                        invalidItems.add("Неверный ID товара: " + productIdObj);
+                        invalidItems.add("Invalid product ID: " + productIdObj);
                     }
 
                 } catch (JSONException e) {
-                    invalidItems.add("Ошибка в позиции " + i + ": " + e.getMessage());
-                    Log.e("OrderItems", "Ошибка обработки элемента заказа", e);
+                    invalidItems.add("Error in position " + i + ": " + e.getMessage());
+                    Log.e("OrderItems", "error parsing element order", e);
                 }
             }
 
             if (!invalidItems.isEmpty()) {
                 runOnUiThread(() -> {
-                    String message = "Проблемы с " + invalidItems.size() + " позициями:\n" +
+                    String message = "Problem with " + invalidItems.size() + " positions:\n" +
                             TextUtils.join("\n", invalidItems.subList(0, Math.min(3, invalidItems.size())));
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                    Log.e(".",message);
                 });
             }
 
             if (cleanedItemsArray.length() == 0) {
                 runOnUiThread(() -> {
-                    Toast.makeText(this, "Нет валидных позиций для сохранения", Toast.LENGTH_LONG).show();
+                    Log.e("No valid positions for save", cleanedItemsArray.toString());
                 });
                 return;
             }
@@ -288,9 +295,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(CartActivity.this,
-                                "Ошибка сети: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show();
+                        Log.e("Network errror",e.getMessage().toString());
                     });
                 }
 
@@ -304,8 +309,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
                             startActivity(new Intent(CartActivity.this, OrderSuccessActivity.class));
                             finish();
                         } else {
-                            String errorMsg = "Ошибка сервера: " + response.code() + " - " + responseBody;
-                            Toast.makeText(CartActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                            String errorMsg = "Server Error: " + response.code() + " - " + responseBody;
                             Log.e("OrderItemsError", errorMsg);
                         }
                     });
@@ -314,7 +318,6 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
         } catch (Exception e) {
             runOnUiThread(() -> {
-                Toast.makeText(this, "Критическая ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e("OrderItemsError", "Fatal error in createOrderItems", e);
             });
         }

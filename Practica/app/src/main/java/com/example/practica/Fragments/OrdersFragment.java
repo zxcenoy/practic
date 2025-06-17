@@ -1,6 +1,7 @@
 package com.example.practica.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,10 +80,10 @@ public class OrdersFragment extends Fragment {
             @Override
             public void onError(String error) {
                 requireActivity().runOnUiThread(() -> {
-                    String fullError = "Ошибка загрузки: " + error +
-                            "\nФильтр: " + statusFilter +
+                    String fullError = "Loading Error: " + error +
+                            statusFilter +
                             "\nUserID: " + authManager.getCurrentUserId();
-                    Toast.makeText(getContext(), fullError, Toast.LENGTH_LONG).show();
+                    Log.e("Loading error",fullError.toString());
                     showEmptyState( );
                 });
             }
@@ -91,9 +92,8 @@ public class OrdersFragment extends Fragment {
 
     private void showEmptyState() {
         String message = statusFilter == null ?
-                "У вас пока нет заказов" :
-                String.format("Нет заказов со статусом: %s", statusFilter);
-
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                "You don't have orders" :
+                String.format("No orders with status code: %s", statusFilter);
+        Log.e("",message.toString());
     }
 }

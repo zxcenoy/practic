@@ -345,7 +345,6 @@
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
                         Log.e("Profile", "Error fetching profile data", e);
-                        Toast.makeText(Profile.this, "Failed to load profile data", Toast.LENGTH_SHORT).show();
                     });
                 }
 

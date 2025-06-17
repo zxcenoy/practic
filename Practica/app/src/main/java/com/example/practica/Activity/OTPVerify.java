@@ -111,8 +111,11 @@ public class OTPVerify extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    runOnUiThread(() ->
-                            Toast.makeText(OTPVerify.this, "Network error", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() ->{
+                        Log.e("Network error",e.getMessage().toString());
+                    });
+
+
                 }
 
                 @Override
@@ -132,11 +135,11 @@ public class OTPVerify extends AppCompatActivity {
                                    auth.saveAccessTokenFromResponse(prettyJson, getApplicationContext());
 
                                } catch (Exception e) {
-                                   Log.e("JSON_PARSE_ERROR", "Ошибка при парсинге JSON", e);
+                                   Log.e("JSON_PARSE_ERROR", "Error parsing JSON", e);
                                }
                            }
                            catch (Exception e){
-                               Log.e("JSON_PARSE_ERROR", "Ошибка при парсинге JSON", e);
+                               Log.e("JSON_PARSE_ERROR", "Error parsing JSON", e);
 
                            }
                                                   Intent intent = new Intent(OTPVerify.this, ChangePassword.class);
@@ -151,7 +154,7 @@ public class OTPVerify extends AppCompatActivity {
                 }
             });
         } catch (Exception e) {
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("Error",e.getMessage().toString());
         }
     }
     public void BackToSignUp(View view){

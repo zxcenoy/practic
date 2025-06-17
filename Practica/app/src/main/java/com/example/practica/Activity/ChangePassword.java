@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -74,27 +75,28 @@ public class ChangePassword extends AppCompatActivity {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    runOnUiThread(() ->
-                            Toast.makeText(ChangePassword.this, "Network error", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() ->{
+                        Log.e("Network error", String.valueOf(e));
+                    });
+
+
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) {
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-
-                            Toast.makeText(ChangePassword.this, "Password changed successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(ChangePassword.this, SignIn.class));
                             finishAffinity();
 
                         } else {
-                            Toast.makeText(ChangePassword.this, "Failed to change password", Toast.LENGTH_SHORT).show();
+                            Log.e("",String.valueOf(response));
                         }
                     });
                 }
             });
         } catch (Exception e) {
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("Error",e.getMessage().toString());
         }
     }
 }

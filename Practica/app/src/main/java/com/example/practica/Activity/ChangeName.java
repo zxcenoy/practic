@@ -71,29 +71,23 @@ public class ChangeName extends AppCompatActivity {
     }
 
     private void sendProfileUpdate(ProfileUpdate profile, String newName) {
-        if (!isNetworkAvailable()) {
-            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         SharedPreferences prefs = getSharedPreferences("my_app_data", MODE_PRIVATE);
         String accessToken = prefs.getString("access_token", null);
         String userId = authManager.getCurrentUserId();
 
         if (userId == null || accessToken == null) {
-            Toast.makeText(this, "Authentication required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SignIn.class);
+            startActivity(intent);
+            finish();
             return;
         }
 
         Gson gson = new Gson();
         String json;
-        try {
             json = gson.toJson(profile);
-            Log.d("ChangeName", "Request JSON: " + json); // Логируем запрос
-        } catch (Exception e) {
-            Toast.makeText(this, "Error creating request", Toast.LENGTH_SHORT).show();
-            return;
-        }
+            Log.d("ChangeName", "Request JSON: " + json);
 
         RequestBody body = RequestBody.create(json, JSON);
         HttpUrl url = HttpUrl.parse(DOMAIN_NAME + REST_PATH + "profiles")
@@ -115,8 +109,7 @@ public class ChangeName extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     Log.e("ChangeName", "Network error", e);
-                    Toast.makeText(ChangeName.this,
-                            "Network error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
                 });
             }
 
@@ -135,22 +128,16 @@ public class ChangeName extends AppCompatActivity {
                         setResult(RESULT_OK, resultIntent);
                         finish();
 
-                        Toast.makeText(ChangeName.this,
-                                "Name updated successfully", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.e("ChangeName", "Error! Code: " + response.code() +
                                 ", Body: " + responseBody);
 
-                        String errorMsg = "Error updating name";
                         try {
                             JSONObject errorJson = new JSONObject(responseBody);
-                            errorMsg = errorJson.optString("message", errorMsg);
                         } catch (Exception e) {
                             Log.e("ChangeName", "Error parsing error response", e);
                         }
 
-                        Toast.makeText(ChangeName.this,
-                                errorMsg, Toast.LENGTH_LONG).show();
                     }
                 });
                 if (response.body() != null) {
@@ -158,12 +145,5 @@ public class ChangeName extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

@@ -56,9 +56,9 @@ public class AuthManager {
             editor.putString("access_token", accessToken);
             editor.apply();
 
-            Log.d("TokenStorage", "Токен успешно сохранён");
+            Log.d("TokenStorage", "Token sucsessfuly save");
         } catch (Exception e) {
-            Log.e("TokenStorage", "Ошибка при извлечении или сохранении токена", e);
+            Log.e("TokenStorage", "Error get or save token", e);
         }
 
     }
@@ -158,7 +158,7 @@ public class AuthManager {
 
                 try {
                     String responseData = response.body().string();
-                    Log.d("ORDERS_RESPONSE", "Raw data: " + responseData); // Логируем ответ
+                    Log.d("ORDERS_RESPONSE", "Raw data: " + responseData);
                     JSONArray ordersArray = new JSONArray(responseData);
                     List<Order> orders = parseOrders(ordersArray);
                     callback.onSuccess(orders);
@@ -181,8 +181,8 @@ public class AuthManager {
 
                 order.setId(getStringSafe(orderJson, "id", ""));
                 order.setUserId(getStringSafe(orderJson, "user_id", ""));
-                order.setAddress(getStringSafe(orderJson, "address", "Адрес не указан"));
-                order.setPaymentMethod(getStringSafe(orderJson, "payment_method", "Не указано"));
+                order.setAddress(getStringSafe(orderJson, "address", "Address null"));
+                order.setPaymentMethod(getStringSafe(orderJson, "payment_method", "Null"));
                 order.setTotalAmount(getDoubleSafe(orderJson, "ammount", 0.0));
                 order.setStatus(getStringSafe(orderJson, "status", "1"));
                 order.setStatusId(getIntSafe(orderJson, "status_id", 1));
@@ -194,7 +194,7 @@ public class AuthManager {
                         order.setCreatedAt(sdf.parse(createdAt));
                     } catch (ParseException e) {
                         order.setCreatedAt(new Date());
-                        Log.e("DATE_PARSE", "Ошибка парсинга даты: " + createdAt, e);
+                        Log.e("DATE_PARSE", "Date parsing errror: " + createdAt, e);
                     }
                 } else {
                     order.setCreatedAt(new Date());
@@ -216,7 +216,7 @@ public class AuthManager {
                         }
                         order.setItems(items);
                     } catch (JSONException e) {
-                        Log.e("ITEMS_PARSE", "Ошибка парсинга items", e);
+                        Log.e("ITEMS_PARSE", "Error parsing items", e);
                         order.setItems(new ArrayList<>());
                     }
                 } else {
@@ -225,7 +225,7 @@ public class AuthManager {
 
                 orders.add(order);
             } catch (JSONException e) {
-                Log.e("ORDER_PARSE", "Ошибка парсинга заказа", e);
+                Log.e("ORDER_PARSE", "Error order parsing", e);
             }
         }
         return orders;

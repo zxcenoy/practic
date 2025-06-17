@@ -45,7 +45,11 @@ public class ChangeEmail extends AppCompatActivity {
             if (accessToken != null) {
                 performEmailUpdate(newEmail, accessToken);
             } else {
-                Toast.makeText(this, "Not authenticated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, SignIn.class);
+                startActivity(intent);
+                finish();
+
             }
         } else {
             showEmailError();
@@ -59,8 +63,9 @@ public class ChangeEmail extends AppCompatActivity {
 
         if (userId == null || userId.isEmpty()) {
             runOnUiThread(() -> {
-                Toast.makeText(this, "User not authenticated. Please login again.",
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, SignIn.class);
+                startActivity(intent);
                 finish();
             });
             return;
@@ -71,9 +76,10 @@ public class ChangeEmail extends AppCompatActivity {
         updateAuthEmail(newEmail, accessToken, new SBC_Callback() {
             @Override
             public void onFailure(IOException e) {
-                runOnUiThread(() ->
-                        Toast.makeText(ChangeEmail.this, "Auth update failed: " + e.getMessage(),
-                                Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> {
+                    Log.e("Auth update failed", e.getMessage().toString());
+                });
+
             }
 
             @Override
@@ -88,8 +94,6 @@ public class ChangeEmail extends AppCompatActivity {
                     setResult(RESULT_OK, resultIntent);
                     finish();
 
-                    Toast.makeText(ChangeEmail.this, "Email updated successfully",
-                            Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -133,7 +137,7 @@ public class ChangeEmail extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     callback.onResponse(response.body().string());
                 } else {
-                    callback.onFailure(new IOException("Ошибка сервера: " + response.code()));
+                    callback.onFailure(new IOException("Server error: " + response.code()));
                 }
             }
         });
@@ -165,20 +169,5 @@ public class ChangeEmail extends AppCompatActivity {
     private void showEmailError() {
         newEmailInput.setError("Please enter a valid email (format: name@domain.com)");
         newEmailInput.requestFocus();
-    }
-
-    private void handleSuccess(String newEmail) {
-        SharedPreferences.Editor editor = getSharedPreferences("my_app_data", MODE_PRIVATE).edit();
-        editor.putString("user_email", newEmail);
-        editor.apply();
-
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("new_email", newEmail);
-        setResult(RESULT_OK, resultIntent);
-        finish();
-        runOnUiThread(() -> {
-            Toast.makeText(this, "Email updated successfully", Toast.LENGTH_SHORT).show();
-        });
-
     }
 }

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -200,22 +201,21 @@ public class SignUp extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                new Handler(Looper.getMainLooper()).post(() ->
-                        Toast.makeText(SignUp.this, "Network error: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                runOnUiThread(() ->{
+                    Log.e("Network error: " , e.getMessage().toString());
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     runOnUiThread(() -> {
-                        Toast.makeText(SignUp.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-
                         Intent intent = new Intent(SignUp.this, SignIn.class);
                         startActivity(intent);
                     });
                 } else {
                     runOnUiThread(() -> {
-                        Toast.makeText(SignUp.this, "Error: " + response.code(), Toast.LENGTH_LONG).show();
+                        Log.e("",String.valueOf(response));
                     });
                 }
             }
