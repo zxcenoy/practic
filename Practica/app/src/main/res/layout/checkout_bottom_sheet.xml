@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Order Confirmation"
+        android:text="@string/OrderConfirmation"
         android:textSize="20sp"
         android:textStyle="bold"
         android:fontFamily="@font/poppins_medium"
@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Delivery Address"
+        android:text="@string/DeliveryAddress"
         android:textSize="16sp"
         android:fontFamily="@font/poppins_medium"
         android:layout_marginBottom="8dp"/>
@@ -38,7 +38,7 @@
             android:id="@+id/etAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Enter delivery address"
+            android:hint="@string/HintEnterDeliveryAddress"
             android:padding="12dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
@@ -49,7 +49,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Payment Method"
+        android:text="@string/PaymentMethod"
         android:textSize="16sp"
         android:fontFamily="@font/poppins_medium"
         android:layout_marginBottom="8dp"/>
@@ -65,7 +65,7 @@
             android:id="@+id/rbCash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cash on Delivery"
+            android:text="@string/CashOnDelivery"
             android:background="#F7F8FB"
             android:drawableRight="@drawable/cash_icon"
             android:fontFamily="@font/poppins_medium"/>
@@ -74,7 +74,7 @@
             android:id="@+id/rbCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Credit Card"
+            android:text="@string/CreditCard"
             android:background="#F7F8FB"
             android:drawableRight="@drawable/visa_icon"
             android:fontFamily="@font/poppins_medium"
@@ -97,14 +97,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Subtotal"
+            android:text="@string/Subtotal"
             android:fontFamily="@font/poppins_medium"/>
 
         <TextView
             android:id="@+id/tvSubtotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$9.00"
+            android:text=""
             android:fontFamily="@font/poppins_medium"/>
     </LinearLayout>
 
@@ -118,14 +118,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Delivery Fee"
+            android:text="@string/DeliveryFee"
             android:fontFamily="@font/poppins_medium"/>
 
         <TextView
             android:id="@+id/tvDeliveryFee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$2.00"
+            android:text=""
             android:fontFamily="@font/poppins_medium"/>
     </LinearLayout>
 
@@ -139,7 +139,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Total"
+            android:text="@string/Total"
             android:textStyle="bold"
             android:fontFamily="@font/poppins_medium"/>
 
@@ -147,7 +147,7 @@
             android:id="@+id/tvTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$11.00"
+            android:text=""
             android:textStyle="bold"
             android:fontFamily="@font/poppins_medium"/>
     </LinearLayout>
@@ -156,7 +156,7 @@
         android:id="@+id/btnPayNow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pay Now"
+        android:text="@string/PayNowButton"
         android:backgroundTint="@color/colorPrimary"
         android:textColor="@android:color/white"
         android:padding="12dp"/>

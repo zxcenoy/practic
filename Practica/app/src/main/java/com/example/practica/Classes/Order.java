@@ -10,7 +10,7 @@ public class Order {
     private String paymentMethod;
     private double totalAmount;
     private String status;
-    private Date createdAt;
+    private Date createdAt = new Date();
     private List<CoffeeOrder> items;
     private int statusId;
     private int productId;

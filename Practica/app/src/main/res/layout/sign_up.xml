@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign up"
+        android:text="@string/Signup"
         android:textSize="24sp"
         android:fontFamily="@font/poppins_medium"
         android:textStyle="bold"
@@ -28,7 +28,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create an account here"
+        android:text="@string/CreateAccount"
         android:textSize="16sp"
         android:fontFamily="@font/poppins_medium"
         android:layout_gravity="left"
@@ -62,7 +62,7 @@
                 android:id="@+id/UserNameSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="UserName"
+                android:hint="@string/HintUserName"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionDone"
                 android:maxLines="1"
@@ -95,7 +95,7 @@
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email address"
+                android:hint="@string/HintEmailAddress"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionDone"
                 android:maxLines="1"
@@ -128,7 +128,7 @@
                 android:id="@+id/PasswordSignUp1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="@string/HintPassword"
                 android:fontFamily="@font/poppins_medium"
                 android:inputType="textPassword"
                 android:imeOptions="actionDone"/>
@@ -161,7 +161,7 @@
                 android:id="@+id/PasswordSignUP2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="@string/HintPassword"
                 android:fontFamily="@font/poppins_medium"
                 android:inputType="textPassword"
                 android:imeOptions="actionDone"/>
@@ -173,7 +173,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="By signing up you agree with our Terms of Use"
+        android:text="@string/terms"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_medium"
@@ -187,14 +187,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already a member?"
+        android:text="@string/AlreadyMember"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/gray"/>
     <TextView
         android:id="@+id/SignInOnSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign in"
+        android:text="@string/Signin"
         android:layout_marginLeft="8dp"
         android:onClick="SignInClick"
         android:textColor="@color/colorPrimary"/>

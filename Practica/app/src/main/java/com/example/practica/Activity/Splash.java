@@ -11,7 +11,6 @@ import com.example.practica.Managers.AuthManager;
 import com.example.practica.R;
 
 public class Splash extends AppCompatActivity {
-
     private AuthManager authManager;
     private static final int SPLASH_DELAY = 2500;
 
@@ -23,6 +22,12 @@ public class Splash extends AppCompatActivity {
         authManager = new AuthManager(this);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (!authManager.isTokenValid(this)) {
+                startActivity(new Intent(Splash.this, SignIn.class));
+                finish();
+                return;
+            }
+
             if (authManager.isLoggedIn()) {
                 if (authManager.hasPinForCurrentUser()) {
                     startActivity(new Intent(Splash.this, PinCode.class));
@@ -33,7 +38,6 @@ public class Splash extends AppCompatActivity {
                 startActivity(new Intent(Splash.this, OnboardingOne.class));
             }
             finish();
-
         }, SPLASH_DELAY);
     }
 }

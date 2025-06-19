@@ -1,5 +1,6 @@
 package com.example.practica.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,12 +14,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.practica.Adapters.CartAdapter;
 import com.example.practica.Classes.CoffeeOrder;
+import com.example.practica.Classes.Order;
+import com.example.practica.Items.RewardItem;
 import com.example.practica.Managers.AuthManager;
 import com.example.practica.Managers.CartManager;
 import com.example.practica.R;
@@ -32,6 +38,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -91,13 +98,13 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         btnPayNow.setOnClickListener(v -> {
             String address = etAddress.getText().toString().trim();
             if (address.isEmpty()) {
-                Toast.makeText(this, "Please enter delivery address", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.PleaseEnterDeliveryAddress), Toast.LENGTH_SHORT).show();
                 return;
             }
 
             int selectedId = rgPayment.getCheckedRadioButtonId();
             if (selectedId == -1) {
-                Toast.makeText(this, "Please select payment method", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.PleaseSelectPaymentMethod), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -115,7 +122,6 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
         if (accessToken.isEmpty()) {
             runOnUiThread(() -> {
-                Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, SignIn.class);
                 startActivity(intent);
                 finish();
@@ -137,16 +143,36 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
             JSONArray itemsArray = new JSONArray();
             for (CoffeeOrder item : CartManager.getInstance().getItems()) {
                 JSONObject itemJson = new JSONObject();
-                itemJson.put("product_id", item.getId());
+                itemJson.put("product_id", item.getProductId());
                 itemJson.put("quantity", item.getQuantity());
                 itemJson.put("price", item.getPrice());
                 itemsArray.put(itemJson);
+
+                Log.d("CartItem", "Product ID: " + item.getProductId() +
+                        ", Name: " + item.getName() +
+                        ", Quantity: " + item.getQuantity());
             }
 
             createMainOrder(orderJson, itemsArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        String orderId = "";
+        authManager.addPointsForOrder(userId,orderId, new AuthManager.PointsCallback() {
+            @Override
+            public void onSuccess(int points) {
+                runOnUiThread(() -> {
+
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+
+                });
+            }
+        });
     }
 
     private void createMainOrder(JSONObject orderJson, JSONArray itemsArray) {
@@ -203,84 +229,34 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
 
     private void createOrderItems(String orderId, JSONArray itemsArray) {
-        OkHttpClient client = new OkHttpClient();
-        SharedPreferences sharedPref = getSharedPreferences("my_app_data", Context.MODE_PRIVATE);
-        String accessToken = sharedPref.getString("access_token", "");
-
-        if (accessToken.isEmpty()) {
-            runOnUiThread(() -> {
-                Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, SignIn.class);
-                startActivity(intent);
-                finish();
-            });
-            return;
-        }
-
         try {
-            JSONArray cleanedItemsArray = new JSONArray();
-            List<String> invalidItems = new ArrayList<>();
+            if (orderId == null || orderId.isEmpty()) {
+                throw new IllegalArgumentException("Order ID is null or empty");
+            }
+
+            JSONArray requestArray = new JSONArray();
 
             for (int i = 0; i < itemsArray.length(); i++) {
-                try {
-                    JSONObject originalItem = itemsArray.getJSONObject(i);
-                    JSONObject cleanedItem = new JSONObject();
+                JSONObject item = itemsArray.getJSONObject(i);
+                JSONObject pos = new JSONObject();
 
-                    Object productIdObj = originalItem.get("product_id");
-                    int productId;
+                pos.put("order_id", orderId);
+                pos.put("product_id", item.getInt("product_id"));
+                pos.put("quantity", item.optInt("quantity", 1));
+                pos.put("price", item.getDouble("price"));
 
-                    if (productIdObj instanceof Boolean) {
-                        productId = (Boolean)productIdObj ? 1 : 0;
-                        Log.w("OrderItems", "Get boolean  product_id, parsed in: " + productId);
-                    } else if (productIdObj instanceof Integer) {
-                        productId = (Integer)productIdObj;
-                    } else if (productIdObj instanceof String) {
-                        try {
-                            productId = Integer.parseInt((String)productIdObj);
-                        } catch (NumberFormatException e) {
-                            throw new JSONException("Invalid format product_id: " + productIdObj);
-                        }
-                    } else {
-                        throw new JSONException("Invalid type product_id: " + productIdObj.getClass().getSimpleName());
-                    }
-
-                    if (productId >= 0) {
-                        cleanedItem.put("order_id", orderId);
-                        cleanedItem.put("product_id", productId);
-                        cleanedItem.put("quantity", originalItem.getInt("quantity"));
-                        cleanedItem.put("price", originalItem.getDouble("price"));
-                        cleanedItemsArray.put(cleanedItem);
-                    } else {
-                        invalidItems.add("Invalid product ID: " + productIdObj);
-                    }
-
-                } catch (JSONException e) {
-                    invalidItems.add("Error in position " + i + ": " + e.getMessage());
-                    Log.e("OrderItems", "error parsing element order", e);
-                }
+                requestArray.put(pos);
             }
 
-            if (!invalidItems.isEmpty()) {
-                runOnUiThread(() -> {
-                    String message = "Problem with " + invalidItems.size() + " positions:\n" +
-                            TextUtils.join("\n", invalidItems.subList(0, Math.min(3, invalidItems.size())));
-                    Log.e(".",message);
-                });
-            }
+            Log.d("OrderItemsRequest", requestArray.toString());
 
-            if (cleanedItemsArray.length() == 0) {
-                runOnUiThread(() -> {
-                    Log.e("No valid positions for save", cleanedItemsArray.toString());
-                });
-                return;
-            }
-
-            Log.d("OrderItems", "Отправляемые данные: " + cleanedItemsArray.toString(2));
-
+            OkHttpClient client = new OkHttpClient();
             RequestBody body = RequestBody.create(
-                    cleanedItemsArray.toString(),
+                    requestArray.toString(),
                     MediaType.parse("application/json")
             );
+            SharedPreferences sharedPref = getSharedPreferences("my_app_data", Context.MODE_PRIVATE);
+            String accessToken = sharedPref.getString("access_token", "");
 
             Request request = new Request.Builder()
                     .url(AuthManager.DOMAIN_NAME + AuthManager.REST_PATH + "order_positions")
@@ -293,35 +269,29 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
 
             client.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    runOnUiThread(() -> {
-                        Log.e("Network errror",e.getMessage().toString());
-                    });
-                }
-
-                @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    String responseBody = response.body() != null ? response.body().string() : "{}";
-
-                    runOnUiThread(() -> {
-                        if (response.isSuccessful()) {
+                    String body = response.body() != null ? response.body().string() : "";
+                    if (response.isSuccessful()) {
+                        runOnUiThread(() -> {
                             CartManager.getInstance().clearCart();
                             startActivity(new Intent(CartActivity.this, OrderSuccessActivity.class));
                             finish();
-                        } else {
-                            String errorMsg = "Server Error: " + response.code() + " - " + responseBody;
-                            Log.e("OrderItemsError", errorMsg);
-                        }
-                    });
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("OrderItemsError", "Request failed", e);
                 }
             });
 
         } catch (Exception e) {
-            runOnUiThread(() -> {
-                Log.e("OrderItemsError", "Fatal error in createOrderItems", e);
-            });
+            Log.e("OrderItemsError", "Create items failed", e);
         }
     }
+
+
 
     private void updateTotal() {
         double total = 0;
@@ -341,5 +311,10 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     @Override
     public void onQuantityChanged() {
         updateTotal();
+    }
+
+
+    public void BackMainOnCart(View view){
+        startActivity(new Intent(this, MainScreen.class));
     }
 }

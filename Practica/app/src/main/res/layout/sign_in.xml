@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign in"
+        android:text="@string/Signin"
         android:textSize="24sp"
         android:textStyle="bold"
         android:fontFamily="@font/poppins_medium"
@@ -28,7 +28,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome back"
+        android:text="@string/WelcomeBack"
         android:textSize="16sp"
         android:textColor="@color/gray"
         android:fontFamily="@font/poppins_medium"
@@ -63,7 +63,7 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email address"
+            android:hint="@string/Email"
             android:inputType="textEmailAddress"
             android:imeOptions="actionDone"
             android:maxLines="1"
@@ -96,7 +96,7 @@
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="@string/Password"
                 android:inputType="textPassword"
                 android:imeOptions="actionDone"/>
 
@@ -108,7 +108,7 @@
         android:id="@+id/tvForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot Password?"
+        android:text="@string/ForgotPassword"
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/poppins_medium"
@@ -133,7 +133,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New member?"
+        android:text="@string/NewMember"
         android:layout_gravity="left"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_medium"
@@ -142,7 +142,7 @@
         android:id="@+id/tvSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign up"
+        android:text="@string/Signup"
         android:onClick="SignUpClick"
         android:layout_marginLeft="10dp"
         android:fontFamily="@font/poppins_medium"

@@ -43,8 +43,8 @@ public class SetPin extends AppCompatActivity {
         TextView titleText = findViewById(R.id.titleText);
         TextView subtitleText = findViewById(R.id.subtitleText);
 
-        titleText.setText("CREATE PIN");
-        subtitleText.setText("Enter your new PIN code");
+        titleText.setText(getString(R.string.CREATEPIN));
+        subtitleText.setText(getString(R.string.EnterPIN));
 
         setupNumberButtons();
         setupBackspaceButton();
@@ -83,8 +83,8 @@ public class SetPin extends AppCompatActivity {
 
                 handler.postDelayed(this::resetFieldsWithEmptyBackground, 2500);
 
-                ((TextView) findViewById(R.id.titleText)).setText("CONFIRM PIN");
-                ((TextView) findViewById(R.id.subtitleText)).setText("Re-enter your PIN to confirm");
+                ((TextView) findViewById(R.id.titleText)).setText(getString(R.string.CONFIRMPIN));
+                ((TextView) findViewById(R.id.subtitleText)).setText(getString(R.string.ReEnterYourPIN));
 
             } else {
                 String secondPin = enteredPin.toString();

@@ -1,8 +1,10 @@
 package com.example.practica.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -11,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +26,7 @@ import com.example.practica.Adapters.CoffeeAdapter;
 import com.example.practica.Items.CoffeeItem;
 import com.example.practica.Adapters.LoyaltyAdapter;
 import com.example.practica.Classes.LoyaltyCup;
+import com.example.practica.Managers.AuthManager;
 import com.example.practica.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -40,17 +44,27 @@ public class MainScreen extends AppCompatActivity {
     private LinearLayout filterMenu;
     private RecyclerView loyaltyRecyclerView;
     private RecyclerView coffeeRecyclerView;
+    AuthManager authManager;
+    private TextView loyaltyProgressText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        authManager = new AuthManager(getApplicationContext());
+        if (!authManager.isTokenValid(this)) {
+            redirectToSignIn();
+            return;
+        }
         setContentView(R.layout.main_screen);
+
+        loyaltyProgressText = findViewById(R.id.loyaltyMainScreen);
+
 
         coffeeRecyclerView = findViewById(R.id.coffeeRecyclerView);
         coffeeRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        adapter = new CoffeeAdapter(getCoffeeList(), this::openCoffeeDetails);
+        adapter = new CoffeeAdapter(new ArrayList<>(), this::openCoffeeDetails);
         coffeeRecyclerView.setAdapter(adapter);
 
         ImageButton btnCart = findViewById(R.id.basketBtn);
@@ -64,32 +78,64 @@ public class MainScreen extends AppCompatActivity {
         loadUserName();
 
         btnProf.setOnClickListener(v -> gotoProfile());
-        //findViewById(R.id.basketBtn).setOnClickListener(this::BasketClick);
 
-        loyaltyRecyclerView = findViewById(R.id.loyaltyRecyclerView);
+        loyaltyRecyclerView = findViewById(R.id.loyaltyRecyclerView1);
         LoyaltyAdapter loyaltyAdapter = new LoyaltyAdapter(getLoyaltyCups());
         loyaltyRecyclerView.setAdapter(loyaltyAdapter);
         loyaltyRecyclerView.setLayoutManager(new LinearLayoutManager(
                 this, LinearLayoutManager.HORIZONTAL, false));
 
-        /*coffeeRecyclerView = findViewById(R.id.coffeeRecyclerView);
-        CoffeeAdapter coffeeAdapter = new CoffeeAdapter(getCoffeeList());
-        coffeeRecyclerView.setAdapter(coffeeAdapter);
-        coffeeRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));*/
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         bottomNav.setSelectedItemId(R.id.nav_home);
+        loadProductsFromSupabase();
 
         initFilters();
+        loadUserData();
+
+    }
+    private void loadUserData() {
+        AuthManager authManager = new AuthManager(this);
+        String userId = authManager.getCurrentUserId();
+        if (userId == null) return;
+
+        authManager.updateLoyaltyStatus(userId, new AuthManager.LoyaltyCallback() {
+            @Override
+            public void onSuccess(int completedOrders, int cupsEarned) {
+                runOnUiThread(() -> {
+                    loyaltyProgressText.setText(completedOrders + " / 8");
+
+                    LoyaltyAdapter adapter = (LoyaltyAdapter) loyaltyRecyclerView.getAdapter();
+                    if (adapter != null) {
+                        List<LoyaltyCup> cups = new ArrayList<>();
+                        for (int i = 0; i < 8; i++) {
+                            cups.add(new LoyaltyCup(i < cupsEarned));
+                        }
+                        adapter.updateCups(cups);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("MainScreen", "Loyalty error: " + error);
+            }
+        });
     }
 
 
     private void openCoffeeDetails(CoffeeItem coffee) {
+        if (coffee.getProductId() < 0) {
+            return;
+        }
+
         Intent intent = new Intent(this, CoffeeDetailActivity.class);
         intent.putExtra("coffee_name", coffee.getName());
         intent.putExtra("coffee_price", coffee.getPrice());
-        intent.putExtra("coffee_image", coffee.getImageResId());
+        intent.putExtra("coffee_image_url", coffee.getImageUrl());
+        intent.putExtra("product_id", coffee.getProductId());
         startActivity(intent);
     }
 
@@ -121,6 +167,7 @@ public class MainScreen extends AppCompatActivity {
         }
     }
 
+
     private void applyFilters() {
         RadioGroup categoryGroup = findViewById(R.id.categoryGroup);
         SeekBar priceSeekBar = findViewById(R.id.priceSeekBar);
@@ -134,7 +181,10 @@ public class MainScreen extends AppCompatActivity {
             category = "milk";
         }
 
-        int maxPrice = priceSeekBar.getProgress() + 1;
+        double maxPrice = priceSeekBar.getProgress() + 1;
+
+        Log.d("MainScreen", "Applying filters - Category: " + category +
+                ", MaxPrice: " + maxPrice);
 
         CoffeeAdapter adapter = (CoffeeAdapter) coffeeRecyclerView.getAdapter();
         if (adapter != null) {
@@ -181,8 +231,23 @@ public class MainScreen extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (!authManager.isTokenValid(this)) {
+            redirectToSignIn();
+            return;
+        }
         loadUserName();
     }
+    private void redirectToSignIn() {
+        authManager.clearAuthData();
+
+        Intent intent = new Intent(this, SignIn.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+
+        Toast.makeText(this, getString(R.string.SessionExpired), Toast.LENGTH_SHORT).show();
+    }
+
 
     private List<LoyaltyCup> getLoyaltyCups() {
         List<LoyaltyCup> cups = new ArrayList<>();
@@ -191,14 +256,49 @@ public class MainScreen extends AppCompatActivity {
         }
         return cups;
     }
+    private void loadProductsFromSupabase() {
+        if (!authManager.isTokenValid(this)) {
+            redirectToSignIn();
+            return;
+        }
+        authManager.getProducts(new AuthManager.ProductCallback() {
+            @Override
+            public void onSuccess(List<CoffeeItem> products) {
+                runOnUiThread(() -> {
+                    Log.d("DataLoad", "Loaded " + products.size() + " items");
+                    if (products.isEmpty()) {
+                        loadLocalProducts();
+                    } else {
+                        adapter = new CoffeeAdapter(products, MainScreen.this::openCoffeeDetails);
+                        coffeeRecyclerView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
 
-    private List<CoffeeItem> getCoffeeList() {
-        List<CoffeeItem> coffeeItems = new ArrayList<>();
-        coffeeItems.add(new CoffeeItem("Americano", R.drawable.americano_menu_photo, "black", 3.0));
-        coffeeItems.add(new CoffeeItem("Cappuccino", R.drawable.cappuccino_menu_photo, "milk", 4.0));
-        coffeeItems.add(new CoffeeItem("Mocha", R.drawable.mocha_menu_photo, "milk", 5.0));
-        coffeeItems.add(new CoffeeItem("Flat White", R.drawable.flat_menu_photo, "milk", 5.0));
-        return coffeeItems;
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    if (!authManager.isTokenValid(MainScreen.this)) {
+                        redirectToSignIn();
+                    } else {
+                        Log.e("MainScreen", "Ошибка загрузки: " + error);
+                        loadLocalProducts();
+                    }
+                });
+            }
+        });
+    }
+
+    private void loadLocalProducts() {
+        List<CoffeeItem> localItems = new ArrayList<>();
+        localItems.add(new CoffeeItem("Americano", R.drawable.americano_menu_photo, "black", 3.0));
+        localItems.add(new CoffeeItem("Cappuccino", R.drawable.cappuccino_menu_photo, "milk", 4.0));
+        localItems.add(new CoffeeItem("Mocha", R.drawable.mocha_menu_photo, "milk", 5.0));
+        localItems.add(new CoffeeItem("Flat White", R.drawable.flat_menu_photo, "milk", 5.0));
+
+        adapter = new CoffeeAdapter(localItems, MainScreen.this::openCoffeeDetails);
+        coffeeRecyclerView.setAdapter(adapter);
     }
 
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {

@@ -6,7 +6,6 @@
     android:padding="16dp"
     android:background="@color/white">
 
-    <!-- Основной контент -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="My Orders"
+            android:text="@string/MyOrders"
             android:textSize="24sp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins_medium"
@@ -33,12 +32,12 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ongoing"/>
+                android:text="@string/Ongoing"/>
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="History"/>
+                android:text="@string/History"/>
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager2.widget.ViewPager2
@@ -47,7 +46,6 @@
             android:layout_height="match_parent"/>
     </LinearLayout>
 
-    <!-- Нижнее меню (поверх всего) -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"

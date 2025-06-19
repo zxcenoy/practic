@@ -35,7 +35,7 @@ public class ForgotPassword extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.PleaseEnterAvalidEmail), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -62,12 +62,12 @@ public class ForgotPassword extends AppCompatActivity {
                 public void onResponse(Call call, Response response) {
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-                            Toast.makeText(ForgotPassword.this, "OTP sent to your email", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ForgotPassword.this, getString(R.string.OTPSend), Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(ForgotPassword.this, OTPVerify.class);
                             intent.putExtra("email", email);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(ForgotPassword.this, "Failed to send OTP", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ForgotPassword.this, getString(R.string.OTPDontSend), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

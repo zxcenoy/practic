@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rewards"
+            android:text="@string/Rewards"
             android:textSize="24sp"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
@@ -43,20 +43,21 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Loyalty card"
+                        android:text="@string/LoyaltyCard"
                         android:fontFamily="@font/poppins_medium"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:textStyle="bold"/>
 
                     <TextView
+                        android:id="@+id/loyaltyProgressText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1 / 8"
                         android:fontFamily="@font/poppins_medium"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
-                        android:layout_marginStart="220dp"/>
+                        android:layout_marginStart="185dp"/>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -67,7 +68,7 @@
                     android:layout_marginTop="16dp"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_loyalty_cup"/>
+                    />
             </LinearLayout>
         </LinearLayout>
 
@@ -79,13 +80,16 @@
 
         <TextView
             android:id="@+id/myPointsText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My Points: 1"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="@string/MyPoints"
             android:textSize="18sp"
-            android:textColor="@color/colorPrimary"
+            android:padding="12dp"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
+            android:background="@color/colorPrimary"
+            android:layout_marginBottom="16dp"
+            android:drawableEnd="@drawable/img"/>
 
 
         <View
@@ -97,7 +101,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reward History"
+            android:text="@string/RewardHistory"
             android:textSize="18sp"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"

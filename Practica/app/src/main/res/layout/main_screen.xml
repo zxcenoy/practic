@@ -84,13 +84,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Loyalty card"
+                            android:text="@string/LoyaltyCard"
                             android:fontFamily="@font/poppins_medium"
                             android:textColor="#FFFFFF"
                             android:textSize="14sp"
                             android:textStyle="bold"/>
 
                         <TextView
+                            android:id="@+id/loyaltyMainScreen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1 / 8"
@@ -102,7 +103,7 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:background="@color/white"
-                        android:id="@+id/loyaltyRecyclerView"
+                        android:id="@+id/loyaltyRecyclerView1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -128,7 +129,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Choose your coffee"
+                            android:text="@string/ChooseYourCoffee"
                             android:textColor="#FFFFFF"
                             android:textSize="14sp"
                             android:fontFamily="@font/poppins_medium"

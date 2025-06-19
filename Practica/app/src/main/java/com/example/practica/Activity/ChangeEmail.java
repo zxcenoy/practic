@@ -45,7 +45,6 @@ public class ChangeEmail extends AppCompatActivity {
             if (accessToken != null) {
                 performEmailUpdate(newEmail, accessToken);
             } else {
-                Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, SignIn.class);
                 startActivity(intent);
                 finish();
@@ -63,7 +62,6 @@ public class ChangeEmail extends AppCompatActivity {
 
         if (userId == null || userId.isEmpty()) {
             runOnUiThread(() -> {
-                Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, SignIn.class);
                 startActivity(intent);
                 finish();

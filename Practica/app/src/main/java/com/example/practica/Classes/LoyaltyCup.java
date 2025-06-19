@@ -1,13 +1,18 @@
 package com.example.practica.Classes;
 
 public class LoyaltyCup {
-    private boolean isActive;
+    private boolean isEarned;
 
-    public LoyaltyCup(boolean isActive) {
-        this.isActive = isActive;
+
+    public LoyaltyCup(boolean isEarned) {
+        this.isEarned = isEarned;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean isEarned() {
+        return isEarned;
+    }
+
+    public void setEarned(boolean earned) {
+        isEarned = earned;
     }
 }

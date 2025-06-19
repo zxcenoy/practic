@@ -1,5 +1,6 @@
 package com.example.practica.Adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.practica.Classes.LoyaltyCup;
 import com.example.practica.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoyaltyAdapter extends RecyclerView.Adapter<LoyaltyAdapter.LoyaltyViewHolder> {
@@ -18,6 +20,11 @@ public class LoyaltyAdapter extends RecyclerView.Adapter<LoyaltyAdapter.LoyaltyV
 
     public LoyaltyAdapter(List<LoyaltyCup> cups) {
         this.cups = cups;
+    }
+    public void updateCups(List<LoyaltyCup> newCups) {
+        this.cups = new ArrayList<>(newCups);
+        notifyDataSetChanged();
+        Log.d("LoyaltyAdapter", "Updated all cups, count: " + newCups.size());
     }
 
     @NonNull
@@ -30,7 +37,18 @@ public class LoyaltyAdapter extends RecyclerView.Adapter<LoyaltyAdapter.LoyaltyV
 
     @Override
     public void onBindViewHolder(@NonNull LoyaltyViewHolder holder, int position) {
+        if (position >= cups.size()){
+            Log.e("LoyaltyAdapter", "Invalid position: " + position);
+
+            return;
+        }
+
+
         LoyaltyCup cup = cups.get(position);
+        Log.d("LoyaltyAdapter", "Binding cup #" + position +
+                " - earned: " + cup.isEarned() +
+                " - hash: " + cup.hashCode());
+
         holder.bind(cup);
     }
 
@@ -49,7 +67,7 @@ public class LoyaltyAdapter extends RecyclerView.Adapter<LoyaltyAdapter.LoyaltyV
 
         public void bind(LoyaltyCup cup) {
             cupImage.setImageResource(
-                    cup.isActive() ?
+                    cup.isEarned() ?
                             R.drawable.coffee_cup_active :
                             R.drawable.coffee_cup_inactive
             );

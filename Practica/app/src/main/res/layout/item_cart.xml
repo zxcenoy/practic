@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Americano"
+            android:text="@string/Americano"
             android:fontFamily="@font/poppins_medium"
             android:textSize="18sp"/>
 
@@ -33,7 +33,7 @@
         android:id="@+id/tvItemOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="single | iced | medium | full ice"
+        android:text="@string/cartParams"
         android:textColor="#666"
         android:fontFamily="@font/poppins_medium"
         android:layout_marginTop="4dp"/>

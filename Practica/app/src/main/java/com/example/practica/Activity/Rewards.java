@@ -2,7 +2,10 @@ package com.example.practica.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,11 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.practica.Adapters.LoyaltyAdapter;
 import com.example.practica.Adapters.RewardHistoryAdapter;
 import com.example.practica.Classes.LoyaltyCup;
+import com.example.practica.Managers.AuthManager;
 import com.example.practica.R;
 import com.example.practica.Items.RewardItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,73 +29,136 @@ import java.util.Locale;
 
 public class Rewards extends AppCompatActivity {
     private TextView myPointsText;
+    private TextView loyaltyProgressText;
     private List<RewardItem> rewardHistory = new ArrayList<>();
-    private static final String PREFS_NAME = "RewardsPrefs";
-    private static final String KEY_POINTS = "total_points";
+
+    AuthManager authManager;
+    LoyaltyAdapter loyaltyAdapter;
+    RewardHistoryAdapter rewardHistoryAdapter;
+
+    RecyclerView rewardHistoryRecyclerView;
+    RecyclerView loyaltyRecyclerView;
+    int[] cups ={0};
+    List<LoyaltyCup> cup;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.rewards);
 
+        cup = Arrays.asList(new LoyaltyCup(false),new LoyaltyCup(false),new LoyaltyCup(false),new LoyaltyCup(false),new LoyaltyCup(false),
+        new LoyaltyCup(false),new LoyaltyCup(false),new LoyaltyCup(false));
+
+        loyaltyProgressText = findViewById(R.id.loyaltyProgressText);
         myPointsText = findViewById(R.id.myPointsText);
-        RecyclerView rewardHistoryRecyclerView = findViewById(R.id.rewardHistoryRecyclerView);
+
+        rewardHistoryRecyclerView = findViewById(R.id.rewardHistoryRecyclerView);
         rewardHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        generateRewardHistory();
 
+        authManager = new AuthManager(this);
 
+        rewardHistoryAdapter = new RewardHistoryAdapter(rewardHistory);
+        rewardHistoryRecyclerView.setAdapter(rewardHistoryAdapter);
 
-
-        RewardHistoryAdapter adapter = new RewardHistoryAdapter(rewardHistory);
-        rewardHistoryRecyclerView.setAdapter(adapter);
-        updatePointsDisplay();
-
-        RecyclerView loyaltyRecyclerView = findViewById(R.id.loyaltyRecyclerView);
-        loyaltyRecyclerView.setLayoutManager(new LinearLayoutManager(
-                this, LinearLayoutManager.HORIZONTAL, false));
-
-        List<LoyaltyCup> loyaltyCups = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            loyaltyCups.add(new LoyaltyCup(i < 4));
-        }
-
-        LoyaltyAdapter loyaltyAdapter = new LoyaltyAdapter(loyaltyCups);
+        loyaltyRecyclerView = findViewById(R.id.loyaltyRecyclerView);
+        /*loyaltyRecyclerView.setLayoutManager(new LinearLayoutManager(
+                this, LinearLayoutManager.HORIZONTAL, false));*/
+        loyaltyAdapter = new LoyaltyAdapter(cup);
         loyaltyRecyclerView.setAdapter(loyaltyAdapter);
-
-
 
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         bottomNav.setSelectedItemId(R.id.nav_rewards);
-    }
 
-
-    private void generateRewardHistory() {
-        Calendar calendar = Calendar.getInstance();
-
-        rewardHistory.add(new RewardItem("Americano", 12, getDate(calendar, -1)));
-        rewardHistory.add(new RewardItem("Cappuccino", 12, getDate(calendar, -2)));
-        rewardHistory.add(new RewardItem("Mocha", 12, getDate(calendar, -3)));
-        rewardHistory.add(new RewardItem("Flat White", 12, getDate(calendar, -4)));
-    }
-    private void updatePointsDisplay() {
-        int totalPoints = calculateTotalPoints();
-        myPointsText.setText(String.format(Locale.getDefault(), "My Points: %d", totalPoints));
-    }
-    private int calculateTotalPoints() {
-        int total = 0;
-        for (RewardItem item : rewardHistory) {
-            if (item != null) {
-                total += item.getPoints();
-            }
+        String userId = authManager.getCurrentUserId();
+        if (userId != null) {
+            loadUserData(userId);
         }
-        return total;
+        loadUserPoints();
     }
 
-    private Date getDate(Calendar calendar, int daysOffset) {
-        calendar.add(Calendar.DAY_OF_YEAR, daysOffset);
-        return calendar.getTime();
+    private void loadUserPoints() {
+        String userId = authManager.getCurrentUserId();
+        if (userId == null) return;
+
+        authManager.calculateAndUpdateUserPoints(userId, new AuthManager.PointsCallback() {
+            @Override
+            public void onSuccess(int points) {
+                runOnUiThread(() -> {
+                    myPointsText.setText("My points " + points);
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    Log.e("RewardsActivity", "Error loading points: " + error);
+                });
+            }
+        });
+    }
+
+    private void loadUserData(String userId) {
+        authManager.updateLoyaltyStatus(userId, new AuthManager.LoyaltyCallback() {
+            @Override
+            public void onSuccess(int completedOrders, int cupsEarned) {
+                runOnUiThread(() -> {
+                    Log.d("Rewards", "Updating UI with cups earned: " + cupsEarned);
+                    loyaltyProgressText.setText(completedOrders + " / 8");
+
+                });
+            }
+            @Override
+            public void onError(String error) {
+                Log.e("Rewards", "Loyalty error: " + error);
+            }
+        });
+
+        authManager.getRewardHistory(userId, new AuthManager.RewardHistoryCallback() {
+            @Override
+            public void onSuccess(List<RewardItem> history) {
+                runOnUiThread(() -> {
+                    if (history != null) {
+                        Log.d("Rewards", "Received history items: " + history.size());
+                        rewardHistoryAdapter.updateData(history);
+                        setupLoyaltyCups(history.size() / 5);
+
+                    } else {
+                        Log.d("Rewards", "History is null");
+                    }
+                });
+            }
+            @Override
+            public void onError(String error) {
+                Log.e("Rewards", "History error: " + error);
+            }
+        });
+    }
+
+    private void setupLoyaltyCups(int cupsEarned) {
+        for (int i = 0; i < 8; i++) {
+            cup.get(i).setEarned(true);
+        }
+        loyaltyAdapter.notifyDataSetChanged();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AuthManager authManager = new AuthManager(this);
+        if (!authManager.isTokenValid(this)) {
+            authManager.clearAuthData();
+
+            Intent intent = new Intent(this, SignIn.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+
+            Toast.makeText(this, getString(R.string.SessionExpired), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {

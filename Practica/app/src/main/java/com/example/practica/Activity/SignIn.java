@@ -68,7 +68,7 @@ public class SignIn extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.AllFieldsAreRequired), Toast.LENGTH_SHORT).show();
             return;
         }
 

@@ -32,6 +32,9 @@ android {
 }
 
 dependencies {
+
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     implementation ("commons-io:commons-io:2.11.0")
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation("com.squareup.okhttp3:okhttp:4.9.1")

@@ -77,12 +77,12 @@
             AppCompatImageButton logoutButton = findViewById(R.id.LogOutButton);
             logoutButton.setOnClickListener(v -> {
                 authManager.logout();
-                Toast.makeText(Profile.this, "Logging out...", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Profile.this, SignIn.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             });
+
 
             String cachedAvatar = prefs.getString("avatar_url", "");
             if (!cachedAvatar.isEmpty()) {
@@ -293,7 +293,7 @@
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString("avatar_url", avatarUrl);
                                 editor.apply();
-                                callback.onResponse("Аватар успешно обновлен");
+                                callback.onResponse("Avatar update success");
                             } else {
                                 String errorBody = response.body() != null ? response.body().string() : "Empty response";
                                 callback.onFailure(new IOException("DB update failed: " + response.code() + ", Body: " + errorBody));
@@ -447,6 +447,22 @@
                     }
                 }
             });
+        }
+        @Override
+        protected void onResume() {
+            super.onResume();
+
+            AuthManager authManager = new AuthManager(this);
+            if (!authManager.isTokenValid(this)) {
+                authManager.clearAuthData();
+
+                Intent intent = new Intent(this, SignIn.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+
+                Toast.makeText(this, getString(R.string.SessionExpired), Toast.LENGTH_SHORT).show();
+            }
         }
         public void BackMain(View view){
             Intent intent = new Intent(this, MainScreen.class);

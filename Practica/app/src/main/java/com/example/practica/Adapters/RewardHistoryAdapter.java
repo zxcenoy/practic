@@ -1,5 +1,6 @@
 package com.example.practica.Adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,12 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RewardHistoryAdap
     public RewardHistoryAdapter(List<RewardItem> rewardItems) {
         this.rewardItems = rewardItems;
     }
+    public void updateData(List<RewardItem> newItems) {
+        this.rewardItems.clear();
+        this.rewardItems.addAll(newItems);
+        Log.d("Adapter", "Updating with " + newItems.size() + " items");
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -33,7 +40,12 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RewardHistoryAdap
     @Override
     public void onBindViewHolder(@NonNull RewardViewHolder holder, int position) {
         RewardItem item = rewardItems.get(position);
-        holder.bind(item);
+        String displayName = item.getDrinkName().isEmpty() ? "Заказ" : item.getDrinkName();
+
+        holder.drinkName.setText(displayName);
+        holder.points.setText("+ " + item.getPoints() + " Pts");
+        holder.date.setText(item.getFormattedDate());
+
     }
 
     @Override
@@ -42,21 +54,12 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RewardHistoryAdap
     }
 
     static class RewardViewHolder extends RecyclerView.ViewHolder {
-        TextView drinkNameTextView;
-        TextView pointsTextView;
-        TextView dateTextView;
-
+        TextView drinkName, points, date;
         public RewardViewHolder(@NonNull View itemView) {
             super(itemView);
-            drinkNameTextView = itemView.findViewById(R.id.drinkName);
-            pointsTextView = itemView.findViewById(R.id.points);
-            dateTextView = itemView.findViewById(R.id.date);
-        }
-
-        public void bind(RewardItem item) {
-            drinkNameTextView.setText(item.getDrinkName());
-            pointsTextView.setText(String.format(Locale.getDefault(), "+ %d Pts", item.getPoints()));
-            dateTextView.setText(new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(item.getDate()));
+            drinkName = itemView.findViewById(R.id.drinkName);
+            points = itemView.findViewById(R.id.points);
+            date = itemView.findViewById(R.id.date);
         }
     }
 }

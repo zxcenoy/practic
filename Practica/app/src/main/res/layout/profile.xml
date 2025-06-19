@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile"
+            android:text="@string/Profile"
             android:textColor="#222222"
             android:textSize="24sp"
             android:fontFamily="@font/poppins_medium"
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Name"
+                android:text="@string/Name"
                 android:textColor="@color/gray"/>
             <TextView
                 android:id="@+id/name"
@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Password"
+                android:text="@string/Password"
                 android:textColor="@color/gray"/>
             <TextView
                 android:id="@+id/password"
@@ -163,7 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Email"
+                android:text="@string/Email"
                 android:textColor="@color/gray"/>
             <TextView
                 android:id="@+id/email"
@@ -209,7 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Adress"
+                android:text="@string/Adress"
                 android:textColor="@color/gray"/>
             <TextView
                 android:id="@+id/adress"

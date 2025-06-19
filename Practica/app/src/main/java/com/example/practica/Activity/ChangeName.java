@@ -61,7 +61,7 @@ public class ChangeName extends AppCompatActivity {
         String newName = newNameInput.getText().toString().trim();
 
         if (newName.isEmpty()) {
-            Toast.makeText(this, "Please enter your new name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.PleaseEnterNewName), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -77,7 +77,6 @@ public class ChangeName extends AppCompatActivity {
         String userId = authManager.getCurrentUserId();
 
         if (userId == null || accessToken == null) {
-            Toast.makeText(this, "Please RE Auth", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SignIn.class);
             startActivity(intent);
             finish();

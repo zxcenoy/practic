@@ -39,8 +39,8 @@ public class PinCode extends AppCompatActivity {
         TextView titleText = findViewById(R.id.titleText);
         TextView subtitleText = findViewById(R.id.subtitleText);
 
-        titleText.setText("PIN CODE");
-        subtitleText.setText("Enter your PIN code");
+        titleText.setText(getString(R.string.PINCODE));
+        subtitleText.setText(getString(R.string.EnterPIN));
 
         setupNumberButtons();
         setupBackspaceButton();

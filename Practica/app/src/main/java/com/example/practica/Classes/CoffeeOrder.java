@@ -6,12 +6,20 @@ public class CoffeeOrder {
     private double price;
     private String description;
     private int quantity;
+    private int productId;
 
     public CoffeeOrder(String name, double price, String description, int quantity) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.quantity = quantity;
+    }
+    public CoffeeOrder(String name, double price, String description, int quantity, int productId) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.quantity = quantity;
+        this.productId = productId;
     }
 
     public String getName() {
@@ -44,5 +52,29 @@ public class CoffeeOrder {
 
     public void setId(boolean id) {
         this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 }

@@ -2,6 +2,7 @@ package com.example.practica.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.example.practica.Classes.CoffeeOrder;
 import com.example.practica.Managers.CartManager;
 import com.example.practica.R;
+import com.squareup.picasso.Picasso;
 
 public class CoffeeDetailActivity extends AppCompatActivity {
     private int quantity = 1;
@@ -33,14 +35,18 @@ public class CoffeeDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String coffeeName = intent.getStringExtra("coffee_name");
         basePrice = intent.getDoubleExtra("coffee_price", 3.00);
-        int imageRes = intent.getIntExtra("coffee_image", R.drawable.americano_menu_photo);
+        String imageUrl = intent.getStringExtra("coffee_image_url");
+
 
         TextView tvCoffeeName = findViewById(R.id.coffeeName);
         tvCoffeeName.setText(coffeeName);
 
         ImageView ivCoffee = findViewById(R.id.coffeeImage);
-        ivCoffee.setImageResource(imageRes);
-
+        Picasso.get()
+                .load(imageUrl)
+                .placeholder(R.drawable.coffee_cup_details)
+                .error(R.drawable.crestik_icon)
+                .into(ivCoffee);
         initNavigation();
         initQuantityControls();
         initShotSelection();
@@ -198,9 +204,24 @@ public class CoffeeDetailActivity extends AppCompatActivity {
     private void initCheckoutButton() {
         Button btnCheckout = findViewById(R.id.btnCheckout);
         btnCheckout.setOnClickListener(v -> {
+            int productId = getIntent().getIntExtra("product_id", -1);
+
+
+            if (productId < 0) {
+                return;
+            }
+
             CoffeeOrder order = createOrder();
             CartManager.getInstance().addToCart(order);
-            startActivity(new Intent(this, CartActivity.class));
+
+            int pointsToAdd = 0;
+            for (CoffeeOrder item : CartManager.getInstance().getItems()) {
+                pointsToAdd += 12 * item.getQuantity();
+            }
+
+            Intent i = new Intent(this, CartActivity.class);
+            i.putExtra("point", pointsToAdd);
+            startActivity(i);
         });
     }
 
@@ -209,11 +230,15 @@ public class CoffeeDetailActivity extends AppCompatActivity {
         String description = String.format("%s shot | %s | %s | %s",
                 selectedShot, selectedIce, selectedSize, selectedSelect);
 
+        int productId = getIntent().getIntExtra("product_id", 0);
+        Log.d("CoffeeDetail", "Product ID: " + productId);
+
         return new CoffeeOrder(
                 ((TextView) findViewById(R.id.coffeeName)).getText().toString(),
                 finalPrice,
                 description,
-                quantity
+                quantity,
+                productId
         );
     }
 

@@ -44,12 +44,12 @@ public class ChangePassword extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
         if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(this, "Please enter and confirm your new password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.PleaseEnterAndConfirmNewPassword), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.PasswordsDoNotMatch), Toast.LENGTH_SHORT).show();
             return;
         }
 

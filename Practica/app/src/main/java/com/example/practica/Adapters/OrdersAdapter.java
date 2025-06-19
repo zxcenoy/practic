@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.practica.Classes.CoffeeOrder;
 import com.example.practica.Classes.Order;
 import com.example.practica.R;
 
@@ -59,16 +60,31 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         }
 
         void bind(Order order) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM | hh:mm a", Locale.getDefault());
-            tvDate.setText(sdf.format(order.getCreatedAt()));
+            // Безопасное форматирование даты
+            String dateString = "Дата не указана";
+            if (order.getCreatedAt() != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMM | hh:mm a", Locale.getDefault());
+                dateString = sdf.format(order.getCreatedAt());
+            }
+            tvDate.setText(dateString);
+
             tvAmount.setText(String.format("$%.2f", order.getTotalAmount()));
 
-            String itemsText = order.getItems().stream()
-                    .map(item -> "• " + item.getName() + " x" + item.getQuantity() + " (" + String.format("$%.2f", item.getPrice() * item.getQuantity()) + ")")
-                    .collect(Collectors.joining("\n"));
+            // Формируем текст позиций заказа
+            StringBuilder itemsText = new StringBuilder();
+            if (order.getItems() != null) {
+                for (CoffeeOrder item : order.getItems()) {
+                    itemsText.append(item.getQuantity())
+                            .append("x ")
+                            .append(item.getName())
+                            .append(" (")
+                            .append(String.format("$%.2f", item.getPrice() * item.getQuantity()))
+                            .append(")\n");
+                }
+            }
+            tvItems.setText(itemsText.toString());
 
-            tvItems.setText(itemsText);
-            tvAddress.setText(order.getAddress());
+            tvAddress.setText(order.getAddress() != null ? order.getAddress() : "Адрес не указан");
             tvStatus.setText(getStatusText(order.getStatusId()));
         }
 

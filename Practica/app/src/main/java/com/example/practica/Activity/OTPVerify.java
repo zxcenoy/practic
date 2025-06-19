@@ -48,6 +48,7 @@ public class OTPVerify extends AppCompatActivity {
 
 
         findViewById(R.id.otp).setOnClickListener(v -> verifyOtpCode());
+
     }
     private void setupOtpFields() {
         for (int i = 0; i < otpFields.length; i++) {
@@ -91,7 +92,7 @@ public class OTPVerify extends AppCompatActivity {
 
         String otpCode = code.toString();
         if (otpCode.length() != 6) {
-            Toast.makeText(this, "Please enter a valid 6-digit code", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.PleaseEnterAvalidOTPCode), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -148,7 +149,7 @@ public class OTPVerify extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            Toast.makeText(OTPVerify.this, "Invalid OTP code", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OTPVerify.this, getString(R.string.InvalidOTPCode), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
