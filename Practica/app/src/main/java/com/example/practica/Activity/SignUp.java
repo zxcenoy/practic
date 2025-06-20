@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,10 +14,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.practica.Managers.AuthManager;
 import com.example.practica.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -66,6 +69,52 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
+    }
+    private void updateProfile(String userId, String username) {
+        SharedPreferences sharedPref = getSharedPreferences("my_app_data", MODE_PRIVATE);
+        String accessToken = sharedPref.getString("access_token", "");
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("full_name", username);
+            json.put("бонусные_баллы", 0);
+        } catch (JSONException e) {
+            Log.e("SignUp", "JSON error", e);
+            return;
+        }
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(json.toString(), JSON);
+
+        Request request = new Request.Builder()
+                .url(AuthManager.DOMAIN_NAME + AuthManager.REST_PATH + "profiles?id=eq." + userId)
+                .patch(body)
+                .addHeader("apikey", getString(R.string.supabase_anon_key))
+                .addHeader("Authorization", "Bearer " + accessToken)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Prefer", "return=representation")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("SignUp", "Update failed", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseBody = response.body() != null ? response.body().string() : "";
+                if (!response.isSuccessful()) {
+                    Log.e("SignUp", "Error updating profile: " + response.code() + ", " + responseBody);
+                } else {
+                    Log.d("SignUp", "Profile updated: " + responseBody);
+
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("user_name", username);
+                    editor.apply();
+                }
+            }
+        });
     }
 
     private void setupTextWatchers() {
@@ -177,6 +226,7 @@ public class SignUp extends AppCompatActivity {
     private void registerUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword1.getText().toString().trim();
+        String username = etUsername.getText().toString().trim();
 
         JSONObject jsonBody = new JSONObject();
         try {
@@ -201,21 +251,38 @@ public class SignUp extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(() ->{
-                    Log.e("Network error: " , e.getMessage().toString());
+                runOnUiThread(() -> {
+                    Log.e("Network error: ", e.getMessage());
                 });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    runOnUiThread(() -> {
-                        Intent intent = new Intent(SignUp.this, SignIn.class);
-                        startActivity(intent);
-                    });
+                    try {
+                        String responseBody = response.body().string();
+                        JSONObject jsonResponse = new JSONObject(responseBody);
+                        String userId = jsonResponse.getJSONObject("user").getString("id");
+
+                        AuthManager authManager = new AuthManager(SignUp.this);
+                        authManager.saveAccessTokenFromResponse(responseBody, SignUp.this);
+                        authManager.saveUserId(userId);
+                        authManager.setLoggedIn(true);
+
+                        updateProfile(userId, username);
+
+                        runOnUiThread(() -> {
+                            Intent intent = new Intent(SignUp.this, SignIn.class);
+                            startActivity(intent);
+                            finish();
+                        });
+                    } catch (Exception e) {
+                        Log.e("SignUp", "Error parsing response", e);
+                    }
                 } else {
                     runOnUiThread(() -> {
-                        Log.e("",String.valueOf(response));
+                        Log.e("SignUp Error", String.valueOf(response));
+                        Toast.makeText(SignUp.this, "Registration failed", Toast.LENGTH_SHORT).show();
                     });
                 }
             }

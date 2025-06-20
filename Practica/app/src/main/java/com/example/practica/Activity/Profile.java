@@ -48,7 +48,7 @@
 
 
 
-        private TextView email;
+        private TextView tvemail;
         private ImageView avatar;
 
 
@@ -59,14 +59,14 @@
 
             authManager = new AuthManager(this);
             name = findViewById(R.id.name);
-            email = findViewById(R.id.email);
+            tvemail = findViewById(R.id.email);
             SharedPreferences prefs = getSharedPreferences("my_app_data", MODE_PRIVATE);
             String userName = prefs.getString("user_name", "");
             if (!userName.isEmpty()) {
                 name.setText(userName);
             }
             name.setText(prefs.getString("user_name", ""));
-            email.setText(prefs.getString("user_email", ""));
+            tvemail.setText(prefs.getString("user_email", ""));
             avatar = findViewById(R.id.avatar);
             avatar.setOnClickListener(v -> openImageChooser());
 
@@ -76,6 +76,14 @@
 
             AppCompatImageButton logoutButton = findViewById(R.id.LogOutButton);
             logoutButton.setOnClickListener(v -> {
+                SharedPreferences prefs1 = getSharedPreferences("my_app_data", MODE_PRIVATE);
+                prefs1.edit()
+                        .remove("user_name")
+                        .remove("user_email")
+                        .remove("user_address")
+                        .remove("avatar_url")
+                        .apply();
+
                 authManager.logout();
                 Intent intent = new Intent(Profile.this, SignIn.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -182,7 +190,7 @@
             else if (requestCode == CHANGE_EMAIL_REQUEST && resultCode == RESULT_OK) {
                 String newEmail = data.getStringExtra("new_email");
                 if (newEmail != null) {
-                    email.setText(newEmail);
+                    tvemail.setText(newEmail);
                     SharedPreferences.Editor editor = getSharedPreferences("my_app_data", MODE_PRIVATE).edit();
                     editor.putString("user_email", newEmail);
                     editor.apply();
@@ -220,6 +228,7 @@
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("file", fileName, requestBody)
                     .build();
+
 
             String url = "https://xenkjiywsgjtgtiyfwxg.supabase.co/storage/v1/object/avatars/"  + fileName;
             SharedPreferences sharedPref = getSharedPreferences("my_app_data", Context.MODE_PRIVATE);
@@ -264,7 +273,7 @@
             RequestBody body = RequestBody.create(
                     MediaType.get("application/json"), jsonBody.toString());
 
-            String updateUrl = "https://xenkjiywsgjtgtiyfwxg.supabase.co" + "/rest/v1/users?id=eq." + userId;
+            String updateUrl = "https://xenkjiywsgjtgtiyfwxg.supabase.co" + "/rest/v1/profiles?id=eq." + userId;
             SharedPreferences sharedPref = getSharedPreferences("my_app_data", Context.MODE_PRIVATE);
 
             String token = sharedPref.getString("access_token", null);
@@ -308,33 +317,23 @@
         }
 
         private void fetchUserProfile() {
+            String userId = authManager.getCurrentUserId();
+            if (userId == null) {
+                Log.e("Profile", "User ID is null");
+                return;
+            }
+            fetchProfileData(userId);
+
+            fetchAuthEmail();
+        }
+
+        private void fetchProfileData(String userId) {
             OkHttpClient client = new OkHttpClient();
             SharedPreferences prefs = getSharedPreferences("my_app_data", MODE_PRIVATE);
-            String accessToken = prefs.getString("access_token", null);
-            String userId = prefs.getString("user_id", null);
-
-
-            HttpUrl profilesUrl = HttpUrl.parse("https://xenkjiywsgjtgtiyfwxg.supabase.co/rest/v1/profiles")
-                    .newBuilder()
-                    .addQueryParameter("id", "eq." + userId)
-                    .addQueryParameter("select", "full_name,address")
-                    .build();
-
-            HttpUrl authUrl = HttpUrl.parse("https://xenkjiywsgjtgtiyfwxg.supabase.co/rest/v1/users")
-                    .newBuilder()
-                    .addQueryParameter("id", "eq." + userId)
-                    .addQueryParameter("select", "email")
-                    .build();
+            String accessToken = prefs.getString("access_token", "");
 
             Request profilesRequest = new Request.Builder()
-                    .url(profilesUrl)
-                    .get()
-                    .addHeader("apikey", getString(R.string.supabase_anon_key))
-                    .addHeader("Authorization", "Bearer " + accessToken)
-                    .build();
-
-            Request authRequest = new Request.Builder()
-                    .url(authUrl)
+                    .url(AuthManager.DOMAIN_NAME + AuthManager.REST_PATH + "profiles?id=eq." + userId)
                     .get()
                     .addHeader("apikey", getString(R.string.supabase_anon_key))
                     .addHeader("Authorization", "Bearer " + accessToken)
@@ -343,107 +342,75 @@
             client.newCall(profilesRequest).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    runOnUiThread(() -> {
-                        Log.e("Profile", "Error fetching profile data", e);
-                    });
+                    Log.e("Profile", "Error fetching profile", e);
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        try {
-                            String responseBody = response.body().string();
-                            JSONArray profiles = new JSONArray(responseBody);
+                    if (!response.isSuccessful()) {
+                        Log.e("Profile", "Error: " + response.code());
+                        return;
+                    }
 
-                            if (profiles.length() > 0) {
-                                JSONObject profile = profiles.getJSONObject(0);
-                                String fullName = profile.optString("full_name", "");
-                                String avatarUrl = profile.optString("avatar_url", "");
-                                String address = profile.optString("address", "");
-                                String adressemail = profile.optString("user_email","");
+                    try {
+                        String responseBody = response.body().string();
+                        JSONArray profiles = new JSONArray(responseBody);
+                        if (profiles.length() > 0) {
+                            JSONObject profile = profiles.getJSONObject(0);
+                            String fullName = profile.optString("full_name", "");
 
-                                runOnUiThread(() -> {
-                                    if (!fullName.isEmpty()) {
-                                        name.setText(fullName);
-                                        SharedPreferences.Editor editor = prefs.edit();
-                                        editor.putString("user_name", fullName);
-
-                                        editor.apply();
-                                    }
-                                    if (!address.isEmpty()) {
-                                        TextView addressView = findViewById(R.id.adress);
-                                        addressView.setText(address);
-                                        SharedPreferences.Editor editor = prefs.edit();
-                                        editor.putString("user_address", address);
-                                        editor.apply();
-                                    }
-                                    if (!adressemail.isEmpty()){
-                                        email.setText(adressemail);
-                                        SharedPreferences.Editor editor1 = prefs.edit();
-                                        editor1.putString("user_email",adressemail);
-                                        editor1.apply();
-                                    }
-                                    if (!avatarUrl.isEmpty()) {
-                                        long lastUpdate = prefs.getLong("avatar_last_update", 0);
-                                        long serverUpdate = profile.optLong("updated_at", 0);
-
-                                        if (serverUpdate > lastUpdate|| !prefs.getString("user_avatar_updated", "false").equals("true")) {
-                                            runOnUiThread(() -> {
-                                                Picasso.get()
-                                                        .load(avatarUrl)
-                                                        .into(avatar);
-
-                                                SharedPreferences.Editor editor = prefs.edit();
-                                                editor.putString("avatar_url", avatarUrl);
-                                                editor.putLong("avatar_last_update", serverUpdate);
-                                                editor.apply();
-                                            });
-                                        }
-                                    }
-                                });
-                            }
-                        } catch (Exception e) {
                             runOnUiThread(() -> {
-                                Log.e("Profile", "Error parsing profile data", e);
+                                if (!fullName.isEmpty()) {
+                                    name.setText(fullName);
+                                    prefs.edit().putString("user_name", fullName).apply();
+                                }
                             });
                         }
+                    } catch (Exception e) {
+                        Log.e("Profile", "JSON parsing error", e);
                     }
                 }
             });
+        }
+
+        private void fetchAuthEmail() {
+            OkHttpClient client = new OkHttpClient();
+            SharedPreferences prefs = getSharedPreferences("my_app_data", MODE_PRIVATE);
+            String accessToken = prefs.getString("access_token", "");
+
+            Request authRequest = new Request.Builder()
+                    .url(AuthManager.DOMAIN_NAME + "/auth/v1/user")
+                    .get()
+                    .addHeader("apikey", getString(R.string.supabase_anon_key))
+                    .addHeader("Authorization", "Bearer " + accessToken)
+                    .build();
 
             client.newCall(authRequest).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    runOnUiThread(() -> {
-                        Log.e("Profile", "Error fetching auth data", e);
-                    });
+                    Log.e("Profile", "Error fetching auth data", e);
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        try {
-                            String responseBody = response.body().string();
-                            JSONArray users = new JSONArray(responseBody);
+                    if (!response.isSuccessful()) {
+                        Log.e("Profile", "Auth error: " + response.code());
+                        return;
+                    }
 
-                            if (users.length() > 0) {
-                                JSONObject user = users.getJSONObject(0);
-                                String userEmail = user.optString("email", "");
+                    try {
+                        String responseBody = response.body().string();
+                        JSONObject userData = new JSONObject(responseBody);
+                        String email = userData.optString("email", "");
 
-                                runOnUiThread(() -> {
-                                    if (!userEmail.isEmpty()) {
-                                        email.setText(userEmail);
-                                        SharedPreferences.Editor editor = prefs.edit();
-                                        editor.putString("user_email", userEmail);
-                                        editor.apply();
-                                    }
-                                });
-                            }
-                        } catch (Exception e) {
+                        if (!email.isEmpty()) {
                             runOnUiThread(() -> {
-                                Log.e("Profile", "Error parsing auth data", e);
+                                tvemail.setText(email);
+                                prefs.edit().putString("user_email", email).apply();
                             });
                         }
+                    } catch (Exception e) {
+                        Log.e("Profile", "JSON parsing error", e);
                     }
                 }
             });
