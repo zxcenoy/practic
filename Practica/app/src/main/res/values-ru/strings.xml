@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Практика</string>
+    <string name="app_name">Cofee</string>
     <dimen name="number_pin">64dp</dimen>
     <string name="supabase_url">https://xenkjiywsgjtgtiyfwxg.supabase.co</string>
     <string name="supabase_anon_key">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmtqaXl3c2dqdGd0aXlmd3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMDkwMzEsImV4cCI6MjA2MjY4NTAzMX0.DkEOCkk34vyLZiJq7ivhU0XUIT8l7Z7pu7pP21TF2XU</string>
@@ -80,7 +80,7 @@
     <string name="Email">Email</string>
     <string name="Adress">Адрес</string>
     <string name="Rewards">Награды</string>
-    <string name="MyPoints">Мои баллы:\n1</string>
+    <string name="MyPoints">Мои баллы: \n</string>
     <string name="RewardHistory">История наград</string>
     <string name="Signin">Вход</string>
     <string name="WelcomeBack">Добро пожаловать</string>
@@ -109,4 +109,7 @@
     <string name="CONFIRMPIN">Подтверждение PIN</string>
     <string name="ReEnterYourPIN">Введите PIN для потверждения</string>
     <string name="AllFieldsAreRequired">Все поля обязательны для заполнения</string>
+    <string name="GoodMorning">Доброе утро</string>
+    <string name="GoodEvening">Добрый вечер</string>
+    <string name="GoodAfternoon">Добрый день</string>
 </resources>

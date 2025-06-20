@@ -214,11 +214,11 @@ public class MainScreen extends AppCompatActivity {
 
         String timeGreeting;
         if (timeOfDay < 12) {
-            timeGreeting = "Good morning";
+            timeGreeting = getString(R.string.GoodMorning);
         } else if (timeOfDay < 16) {
-            timeGreeting = "Good afternoon";
+            timeGreeting = getString(R.string.GoodAfternoon);
         } else {
-            timeGreeting = "Good evening";
+            timeGreeting = getString(R.string.GoodEvening);
         }
 
         String greeting = timeGreeting + ", " + userName;

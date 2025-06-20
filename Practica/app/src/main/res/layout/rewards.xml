@@ -57,7 +57,7 @@
                         android:fontFamily="@font/poppins_medium"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
-                        android:layout_marginStart="185dp"/>
+                        android:layout_marginStart="165dp"/>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView

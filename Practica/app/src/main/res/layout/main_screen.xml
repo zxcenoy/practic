@@ -98,7 +98,7 @@
                             android:fontFamily="@font/poppins_medium"
                             android:textColor="#FFFFFF"
                             android:textSize="14sp"
-                            android:layout_marginStart="220dp"/>
+                            android:layout_marginStart="190dp"/>
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -141,7 +141,7 @@
                             android:layout_height="30dp"
                             android:src="@drawable/filter_icon"
                             android:contentDescription="Filter"
-                            android:layout_marginStart="200dp"/>
+                            android:layout_marginStart="180dp"/>
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView

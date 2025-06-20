@@ -88,7 +88,7 @@ public class Rewards extends AppCompatActivity {
             @Override
             public void onSuccess(int points) {
                 runOnUiThread(() -> {
-                    myPointsText.setText("My points " + points);
+                    myPointsText.setText(getString(R.string.MyPoints) + points);
                 });
             }
 

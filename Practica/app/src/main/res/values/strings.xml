@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Practica</string>
+    <string name="app_name">Coffee</string>
     <dimen name="number_pin">64dp</dimen>
     <string name="supabase_url">https://xenkjiywsgjtgtiyfwxg.supabase.co</string>
     <string name="supabase_anon_key">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmtqaXl3c2dqdGd0aXlmd3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMDkwMzEsImV4cCI6MjA2MjY4NTAzMX0.DkEOCkk34vyLZiJq7ivhU0XUIT8l7Z7pu7pP21TF2XU</string>
@@ -78,7 +78,7 @@
     <string name="Email">Email</string>
     <string name="Adress">Adress</string>
     <string name="Rewards">Rewards</string>
-    <string name="MyPoints">My Points: \n 1</string>
+    <string name="MyPoints">My Points: \n </string>
     <string name="RewardHistory">Reward History</string>
     <string name="Signin">Sign in</string>
     <string name="WelcomeBack">Welcome back</string>
@@ -107,4 +107,7 @@
     <string name="CONFIRMPIN">CONFIRM PIN</string>
     <string name="ReEnterYourPIN">Re-enter your PIN to confirm</string>
     <string name="AllFieldsAreRequired">All fields are required</string>
+    <string name="GoodMorning">Good Morning</string>
+    <string name="GoodEvening">Good Evening</string>
+    <string name="GoodAfternoon">Good Afternoon</string>
 </resources>
