@@ -23,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -187,17 +189,30 @@ public class SignUp extends AppCompatActivity {
     }
 
     private boolean validateEmail() {
-        String text = etEmail.getText().toString().trim();
-        if (text.isEmpty()) {
+        String email = etEmail.getText().toString().trim();
+
+        if (email.isEmpty()) {
             layoutEmail.setError("Email is required");
             return false;
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches()) {
-            layoutEmail.setError("Enter a valid email");
-            return false;
-        } else {
-            layoutEmail.setError(null);
-            return true;
         }
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+
+        if (!matcher.matches()) {
+            layoutEmail.setError("Enter a valid email (format: name@domain.domain)");
+            return false;
+        }
+
+        if (email.length() < 6) {
+            layoutEmail.setError("Email is too short");
+            return false;
+        }
+
+        layoutEmail.setError(null);
+        return true;
     }
 
     private boolean validatePasswords() {
@@ -212,15 +227,29 @@ public class SignUp extends AppCompatActivity {
             layoutPassword2.setError("Confirm password is required");
             layoutPassword1.setError(null);
             return false;
-        } else if (!pass1.equals(pass2)) {
+        }
+
+        if (pass1.length() < 6 || pass1.length() > 10) {
+            layoutPassword1.setError("Password must be 6-10 characters");
+            layoutPassword2.setError(null);
+            return false;
+        }
+
+        if (!pass1.matches("^[a-zA-Z0-9]+$")) {
+            layoutPassword1.setError("Only letters and numbers allowed");
+            layoutPassword2.setError(null);
+            return false;
+        }
+
+        if (!pass1.equals(pass2)) {
             layoutPassword1.setError("Passwords do not match");
             layoutPassword2.setError("Passwords do not match");
             return false;
-        } else {
-            layoutPassword1.setError(null);
-            layoutPassword2.setError(null);
-            return true;
         }
+
+        layoutPassword1.setError(null);
+        layoutPassword2.setError(null);
+        return true;
     }
 
     private void registerUser() {

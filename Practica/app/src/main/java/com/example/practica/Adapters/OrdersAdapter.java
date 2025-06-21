@@ -60,7 +60,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         }
 
         void bind(Order order) {
-            // Безопасное форматирование даты
             String dateString = "Дата не указана";
             if (order.getCreatedAt() != null) {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd MMM | hh:mm a", Locale.getDefault());
@@ -70,7 +69,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
 
             tvAmount.setText(String.format("$%.2f", order.getTotalAmount()));
 
-            // Формируем текст позиций заказа
             StringBuilder itemsText = new StringBuilder();
             if (order.getItems() != null) {
                 for (CoffeeOrder item : order.getItems()) {

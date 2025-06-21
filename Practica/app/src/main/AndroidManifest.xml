@@ -18,10 +18,6 @@
         <activity
             android:name=".Activity.SignIn"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Activity.MainScreen"
             android:exported="true">
@@ -39,7 +35,12 @@
         <activity android:name=".Activity.SetPin"
             android:exported="true"/>
         <activity android:name=".Activity.Splash"
-            android:exported="true"/>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Activity.ForgotPassword"
             android:exported="true"/>
         <activity android:name=".Activity.OTPVerify"
