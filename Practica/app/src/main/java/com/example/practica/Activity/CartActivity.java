@@ -54,19 +54,23 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     private CartAdapter adapter;
     private TextView tvTotalPrice;
     private AuthManager authManager;
+    RecyclerView rvCartItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
+
+
         authManager = new AuthManager(this);
 
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
-        RecyclerView rvCartItems = findViewById(R.id.rvCartItems);
+        rvCartItems = findViewById(R.id.rvCartItems);
         rvCartItems.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new CartAdapter(CartManager.getInstance().getItems(), this);
+        rvCartItems.setLayoutManager(new LinearLayoutManager(this));
         rvCartItems.setAdapter(adapter);
 
         Button btnCheckout = findViewById(R.id.btnCheckout);
@@ -305,6 +309,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     public void onItemRemoved(int position) {
         CartManager.getInstance().removeItem(position);
         adapter.notifyItemRemoved(position);
+        adapter.notifyItemRangeChanged(position, adapter.getItemCount());
         updateTotal();
     }
 
@@ -312,6 +317,14 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     public void onQuantityChanged() {
         updateTotal();
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter = new CartAdapter(CartManager.getInstance().getItems(), this);
+        rvCartItems.setAdapter(adapter);
+        updateTotal();
+    }
+
 
 
     public void BackMainOnCart(View view){

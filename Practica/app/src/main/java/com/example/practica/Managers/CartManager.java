@@ -9,6 +9,7 @@ public class CartManager {
     private static CartManager instance;
     private List<CoffeeOrder> items = new ArrayList<>();
 
+
     public static CartManager getInstance() {
         if (instance == null) {
             instance = new CartManager();
@@ -46,4 +47,5 @@ public class CartManager {
     public void clearCart() {
         items.clear();
     }
+
 }

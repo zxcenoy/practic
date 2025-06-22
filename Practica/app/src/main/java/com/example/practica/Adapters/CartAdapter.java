@@ -24,6 +24,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         void onQuantityChanged();
     }
 
+
     public CartAdapter(List<CoffeeOrder> items, OnCartItemListener listener) {
         this.items = items;
         this.listener = listener;
@@ -69,7 +70,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             tvPrice.setText(String.format("$%.2f", order.getPrice() * order.getQuantity()));
             tvQuantity.setText(String.valueOf(order.getQuantity()));
 
-            btnRemove.setOnClickListener(v -> listener.onItemRemoved(position));
+            btnRemove.setOnClickListener(v -> {
+                items.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, getItemCount());
+                listener.onItemRemoved(position);
+            });
 
             btnIncrease.setOnClickListener(v -> {
                 order.setQuantity(order.getQuantity() + 1);
@@ -93,6 +99,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             tvPrice.setText(String.format("$%.2f", order.getPrice() * order.getQuantity()));
             updateButtonStyles();
         }
+
+
 
         private void updateButtonStyles() {
             int quantity = Integer.parseInt(tvQuantity.getText().toString());
